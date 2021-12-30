@@ -82,6 +82,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         double bestDistance = 100;
         boolean found = false;
 
+        // TODO: add way to update position?
+
         if (rotationDirection.equals("left")){
             rotationAnchorOriginal = currentPiece.block(currentPiece.anchorLeftIndex()).clone();
             anchorOriginal = currentPiece.block(currentPiece.anchorTurnIndex()).clone();
