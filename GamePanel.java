@@ -129,6 +129,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                     }
                 }
             }
+            if (!found) currentPiece.rotate(RIGHT);
         }
         else if (rotationDirection.equals("right")){
             rotationAnchorOriginal = currentPiece.block(currentPiece.anchorRightIndex()).clone();
@@ -177,6 +178,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                     }
                 }
             }
+            if (!found) currentPiece.rotate(LEFT);
         }
         else if (rotationDirection.equals("turn")){
             rotationAnchorOriginal = currentPiece.block(currentPiece.anchorTurnIndex()).clone();
@@ -225,6 +227,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                     }
                 }
             }
+            if (!found) currentPiece.rotate(TURN);
+        }
+        else {
+            throw new java.lang.Error("Invalid rotation type.");
         }
     }
 
