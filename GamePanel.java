@@ -13,6 +13,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public int[][] board = new int[BOARD_WIDTH][BOARD_HEIGHT];
     public Tetrimino currentPiece;
     public int[] currentPieceLocation = new int[2];
+    public int[] ghostPieceLocation = new int[2];
 
     @Override
     public void keyTyped(KeyEvent e){
@@ -93,13 +94,24 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             for (int anchorX = rotationAnchorOriginal[0] - 1; anchorX <= rotationAnchorOriginal[0] + 1; anchorX++){
                 for (int anchorY = rotationAnchorOriginal[1] - 1; anchorY <= rotationAnchorOriginal[1] + 1; anchorY++){
                     counter = 0;
+
                     for (int i = 0; i < 4; i++){
                         testSqaureX = anchorX - currentPiece.block(currentPiece.anchorLeftIndex())[0] + currentPiece.block(i)[0];
                         testSqaureY = anchorY - currentPiece.block(currentPiece.anchorLeftIndex())[1] + currentPiece.block(i)[1];
-                        if ((testSqaureX < 0) || (testSqaureX >= BOARD_WIDTH)) break;
-                        if ((testSqaureY < 0) || (testSqaureY >= BOARD_HEIGHT)) break; // TODO: board height is higher than actual playing field, may need to account
-                        if (board[testSqaureX][testSqaureY] == 0) counter++;
+
+                        if ((testSqaureX < 0) || (testSqaureX >= BOARD_WIDTH)){
+                            break;
+                        }
+
+                        if ((testSqaureY < 0) || (testSqaureY >= BOARD_HEIGHT)){
+                            break; // TODO: board height is higher than actual playing field, may need to account
+                        }
+
+                        if (board[testSqaureX][testSqaureY] == 0){
+                            counter++;
+                        }
                     }
+                    
                     if (counter == 4){
                         if (!found){
                             found = true;
@@ -131,7 +143,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                     }
                 }
             }
-            if (!found) currentPiece.rotate(RIGHT);
+
+            if (!found){
+                currentPiece.rotate(RIGHT);
+            }
         }
         else if (rotationDirection.equals("right")){
             rotationAnchorOriginal = currentPiece.block(currentPiece.anchorRightIndex()).clone();
@@ -142,13 +157,24 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             for (int anchorX = rotationAnchorOriginal[0] - 1; anchorX <= rotationAnchorOriginal[0] + 1; anchorX++){
                 for (int anchorY = rotationAnchorOriginal[1] - 1; anchorY <= rotationAnchorOriginal[1] + 1; anchorY++){
                     counter = 0;
+                    
                     for (int i = 0; i < 4; i++){
                         testSqaureX = anchorX - currentPiece.block(currentPiece.anchorRightIndex())[0] + currentPiece.block(i)[0];
                         testSqaureY = anchorY - currentPiece.block(currentPiece.anchorRightIndex())[1] + currentPiece.block(i)[1];
-                        if ((testSqaureX < 0) || (testSqaureX >= BOARD_WIDTH)) break;
-                        if ((testSqaureY < 0) || (testSqaureY >= BOARD_HEIGHT)) break; // TODO: board height is higher than actual playing field, may need to account
-                        if (board[testSqaureX][testSqaureY] == 0) counter++;
+
+                        if ((testSqaureX < 0) || (testSqaureX >= BOARD_WIDTH)){
+                            break;
+                        }
+
+                        if ((testSqaureY < 0) || (testSqaureY >= BOARD_HEIGHT)){
+                            break; // TODO: board height is higher than actual playing field, may need to account
+                        }
+
+                        if (board[testSqaureX][testSqaureY] == 0){
+                            counter++;
+                        }
                     }
+
                     if (counter == 4){
                         if (!found){
                             found = true;
@@ -180,7 +206,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                     }
                 }
             }
-            if (!found) currentPiece.rotate(LEFT);
+
+            if (!found){
+                currentPiece.rotate(LEFT);
+            }
         }
         else if (rotationDirection.equals("turn")){
             rotationAnchorOriginal = currentPiece.block(currentPiece.anchorTurnIndex()).clone();
@@ -191,13 +220,24 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             for (int anchorX = rotationAnchorOriginal[0] - 1; anchorX <= rotationAnchorOriginal[0] + 1; anchorX++){
                 for (int anchorY = rotationAnchorOriginal[1] - 1; anchorY <= rotationAnchorOriginal[1] + 1; anchorY++){
                     counter = 0;
+
                     for (int i = 0; i < 4; i++){
                         testSqaureX = anchorX - currentPiece.block(currentPiece.anchorLeftIndex())[0] + currentPiece.block(i)[0];
                         testSqaureY = anchorY - currentPiece.block(currentPiece.anchorLeftIndex())[1] + currentPiece.block(i)[1];
-                        if ((testSqaureX < 0) || (testSqaureX >= BOARD_WIDTH)) break;
-                        if ((testSqaureY < 0) || (testSqaureY >= BOARD_HEIGHT)) break; // TODO: board height is higher than actual playing field, may need to account
-                        if (board[testSqaureX][testSqaureY] == 0) counter++;
+
+                        if ((testSqaureX < 0) || (testSqaureX >= BOARD_WIDTH)){
+                            break;
+                        }
+
+                        if ((testSqaureY < 0) || (testSqaureY >= BOARD_HEIGHT)){
+                            break; // TODO: board height is higher than actual playing field, may need to account
+                        }
+
+                        if (board[testSqaureX][testSqaureY] == 0){
+                            counter++;
+                        }
                     }
+
                     if (counter == 4){
                         if (!found){
                             found = true;
@@ -229,10 +269,40 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                     }
                 }
             }
-            if (!found) currentPiece.rotate(TURN);
+
+            if (!found){
+                currentPiece.rotate(TURN);
+            }
         }
         else {
             throw new java.lang.Error("Invalid rotation type.");
+        }
+    }
+
+    public void ghostPiece(){
+        int counter;
+        int x = currentPieceLocation[0];
+        int testSqaureX;
+        int testSqaureY;
+
+        for (int y = currentPieceLocation[1]; y >= 0; y--){
+            counter = 0;
+
+            for (int i = 0; i < 4; i++){
+                testSqaureX = x + currentPiece.block(i)[0];
+                testSqaureY = y + currentPiece.block(i)[1];
+
+                if (board[testSqaureX][testSqaureY] == 0){
+                    counter++;
+                }
+            }
+
+            if (counter < 4){
+                break;
+            }
+            else {
+                ghostPieceLocation = new int[] {x,y};
+            }
         }
     }
 

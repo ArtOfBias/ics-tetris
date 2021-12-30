@@ -126,14 +126,22 @@ class Tetrimino {
         for (int y = 2; y > -3; y--){
             for (int x = -2; x < 3; x++){
                 o = false;
+
                 for (int i = 0; i < 4; i++){
                     if (blocks[i][0] == x && blocks[i][1] == y){
-                        if (i == anchorTurn) System.out.print("a");
-                        else System.out.print("x");
+                        if (i == anchorTurn){
+                            System.out.print("a");
+                        }
+                        else {
+                            System.out.print("x");
+                        }
                         o = true;
                     }
                 }
-                if (!o) System.out.print(" ");
+
+                if (!o){
+                    System.out.print(" ");
+                }
             }
             System.out.print("\n");
         }
