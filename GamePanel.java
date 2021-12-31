@@ -71,6 +71,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                 }
             }
         }
+
+        // TODO: draw ghost piece
+        // TODO: draw current piece
+        // TODO: draw queue
     }
 
     public void rotate(String rotationDirection){
@@ -111,7 +115,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                             counter++;
                         }
                     }
-                    
+
                     if (counter == 4){
                         if (!found){
                             found = true;
@@ -282,15 +286,24 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public void ghostPiece(){
         int counter;
         int x = currentPieceLocation[0];
+        int y;
         int testSqaureX;
         int testSqaureY;
 
-        for (int y = currentPieceLocation[1]; y >= 0; y--){
+        for (y = currentPieceLocation[1]; y >= 0; y--){
             counter = 0;
 
             for (int i = 0; i < 4; i++){
                 testSqaureX = x + currentPiece.block(i)[0];
                 testSqaureY = y + currentPiece.block(i)[1];
+
+                if ((testSqaureX < 0) || (testSqaureX >= BOARD_WIDTH)){
+                    continue;
+                }
+
+                if ((testSqaureY < 0) || (testSqaureY >= BOARD_HEIGHT)){
+                    continue;
+                }
 
                 if (board[testSqaureX][testSqaureY] == 0){
                     counter++;
@@ -300,10 +313,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             if (counter < 4){
                 break;
             }
-            else {
-                ghostPieceLocation = new int[] {x,y};
-            }
         }
+        ghostPieceLocation = new int[] {x,y};
+    }
+
+    public void hardDrop(){
+        // TODO: finish hard drop, currently just thinking of setting currentPieceLocation to ghostPieceLocation
     }
 
     public double distance(int[] point1, int[] point2){
