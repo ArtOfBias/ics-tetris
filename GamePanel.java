@@ -15,6 +15,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public int[] currentPieceLocation = new int[2];
     public int[] ghostPieceLocation = new int[2];
 
+    public boolean rotateHeld = false;
+    public boolean horizontalHeld = false;
+    public boolean softDropHeld = false;
+
     @Override
     public void keyTyped(KeyEvent e){
 
@@ -22,13 +26,41 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
     @Override
     public void keyPressed(KeyEvent e){
-        // TODO Auto-generated method stub
+        if (e.getKeyCode() == KeyEvent.VK_Z){
+            if (!rotateHeld){
+                rotateHeld = true;
+                rotate(LEFT);
+            }
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_UP){
+            if (!rotateHeld){
+                rotateHeld = true;
+                rotate(RIGHT);
+            }
+        }
         
+        if (e.getKeyCode() == KeyEvent.VK_A){
+            if (!rotateHeld){
+                rotateHeld = true;
+                rotate(TURN);
+            }
+        }
     }
 
     @Override
     public void keyReleased(KeyEvent e){
-        // TODO Auto-generated method stub
+        if (e.getKeyCode() == KeyEvent.VK_Z){
+            rotateHeld = false;
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_UP){
+            rotateHeld = false;
+        }
+        
+        if (e.getKeyCode() == KeyEvent.VK_A){
+            rotateHeld = false;
+        }
         
     }
 
@@ -148,7 +180,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                 }
             }
 
-            if (!found){
+            if (found){
+                currentPieceLocation[0] = best[0];
+                currentPieceLocation[1] = best[1];
+            }
+            else {
                 currentPiece.rotate(RIGHT);
             }
         }
