@@ -7,6 +7,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public static final String LEFT = "left";
     public static final String RIGHT = "right";
     public static final String TURN = "turn";
+    public static final String DOWN = "down";
     public static final int BOARD_WIDTH = 10;
     public static final int BOARD_HEIGHT = 25;
 
@@ -15,12 +16,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public int[] currentPieceLocation = new int[2];
     public int[] ghostPieceLocation = new int[2];
 
-    public boolean heldZ = false;
-    public boolean heldUP = false;
-    public boolean heldA = false;
+    public boolean held_Z = false;
+    public boolean held_UP = false;
+    public boolean held_A = false;
 
-    // TODO: change these to individual keys
-    public boolean horizontalHeld = false;
+    public boolean held_LEFT = false;
+    public boolean held_RIGHT = false;
+
     public boolean softDropHeld = false;
 
     @Override
@@ -31,39 +33,48 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     @Override
     public void keyPressed(KeyEvent e){
         if (e.getKeyCode() == KeyEvent.VK_Z){
-            if (!heldZ){
-                heldZ = true;
+            if (!held_Z){
+                held_Z = true;
                 rotate(LEFT);
             }
         }
 
         if (e.getKeyCode() == KeyEvent.VK_UP){
-            if (!heldUP){
-                heldUP = true;
+            if (!held_UP){
+                held_UP = true;
                 rotate(RIGHT);
             }
         }
         
         if (e.getKeyCode() == KeyEvent.VK_A){
-            if (!heldA){
-                heldA = true;
+            if (!held_A){
+                held_A = true;
                 rotate(TURN);
             }
+        }
+
+        // TODO: unfinished
+        if (e.getKeyCode() == KeyEvent.VK_LEFT){
+            if (!held_LEFT){
+                held_LEFT = true;
+                move(LEFT);
+            }
+
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e){
         if (e.getKeyCode() == KeyEvent.VK_Z){
-            heldZ = false;
+            held_Z = false;
         }
 
         if (e.getKeyCode() == KeyEvent.VK_UP){
-            heldUP = false;
+            held_UP = false;
         }
         
         if (e.getKeyCode() == KeyEvent.VK_A){
-            heldA = false;
+            held_A = false;
         }
         
     }
@@ -113,7 +124,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         // TODO: draw queue
     }
 
-    public void rotate(String rotationDirection){
+    public void rotate(String direction){
         int[] rotationAnchorOriginal;
         int[] anchorOriginal;
         int counter;
@@ -125,7 +136,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
         // TODO: add way to update position?
 
-        if (rotationDirection.equals("left")){
+        if (direction.equals("left")){
             rotationAnchorOriginal = currentPiece.block(currentPiece.anchorLeftIndex()).clone();
             anchorOriginal = currentPiece.block(currentPiece.anchorTurnIndex()).clone();
             currentPiece.rotate(LEFT);
@@ -192,7 +203,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                 currentPiece.rotate(RIGHT);
             }
         }
-        else if (rotationDirection.equals("right")){
+        else if (direction.equals("right")){
             rotationAnchorOriginal = currentPiece.block(currentPiece.anchorRightIndex()).clone();
             anchorOriginal = currentPiece.block(currentPiece.anchorTurnIndex()).clone();
             currentPiece.rotate(RIGHT);
@@ -255,7 +266,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                 currentPiece.rotate(LEFT);
             }
         }
-        else if (rotationDirection.equals("turn")){
+        else if (direction.equals("turn")){
             rotationAnchorOriginal = currentPiece.block(currentPiece.anchorTurnIndex()).clone();
             anchorOriginal = currentPiece.block(currentPiece.anchorTurnIndex()).clone();
             currentPiece.rotate(TURN);
@@ -359,6 +370,90 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
     public void hardDrop(){
         // TODO: finish hard drop, currently just thinking of setting currentPieceLocation to ghostPieceLocation
+    }
+
+    public void move(String direction){
+        int counter = 0;
+        int x = currentPieceLocation[0];
+        int y = currentPieceLocation[1];
+        int testSqaureX;
+        int testSqaureY;
+
+        if (direction.equals("down")){
+            y--;
+
+            for (int i = 0; i < 4; i++){
+                testSqaureX = x + currentPiece.block(i)[0];
+                testSqaureY = y + currentPiece.block(i)[1];
+
+                if ((testSqaureX < 0) || (testSqaureX >= BOARD_WIDTH)){
+                    continue;
+                }
+
+                if ((testSqaureY < 0) || (testSqaureY >= BOARD_HEIGHT)){
+                    continue;
+                }
+
+                if (board[testSqaureX][testSqaureY] == 0){
+                    counter++;
+                }
+            }
+
+            if (counter == 4){
+                currentPieceLocation = new int[] {x,y};
+            }
+        }
+        else if (direction.equals("left")){
+            x--;
+
+            for (int i = 0; i < 4; i++){
+                testSqaureX = x + currentPiece.block(i)[0];
+                testSqaureY = y + currentPiece.block(i)[1];
+
+                if ((testSqaureX < 0) || (testSqaureX >= BOARD_WIDTH)){
+                    continue;
+                }
+
+                if ((testSqaureY < 0) || (testSqaureY >= BOARD_HEIGHT)){
+                    continue;
+                }
+
+                if (board[testSqaureX][testSqaureY] == 0){
+                    counter++;
+                }
+            }
+
+            if (counter == 4){
+                currentPieceLocation = new int[] {x,y};
+            }
+        }
+        else if (direction.equals("right")){
+            x++;
+
+            for (int i = 0; i < 4; i++){
+                testSqaureX = x + currentPiece.block(i)[0];
+                testSqaureY = y + currentPiece.block(i)[1];
+
+                if ((testSqaureX < 0) || (testSqaureX >= BOARD_WIDTH)){
+                    continue;
+                }
+
+                if ((testSqaureY < 0) || (testSqaureY >= BOARD_HEIGHT)){
+                    continue;
+                }
+
+                if (board[testSqaureX][testSqaureY] == 0){
+                    counter++;
+                }
+            }
+
+            if (counter == 4){
+                currentPieceLocation = new int[] {x,y};
+            }
+        }
+        else {
+            throw new java.lang.Error("Invalid movement direction.");
+        }
     }
 
     public double distance(int[] point1, int[] point2){
