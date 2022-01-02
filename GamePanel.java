@@ -15,7 +15,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public int[] currentPieceLocation = new int[2];
     public int[] ghostPieceLocation = new int[2];
 
-    public boolean rotateHeld = false;
+    public boolean heldZ = false;
+    public boolean heldUP = false;
+    public boolean heldA = false;
+
+    // TODO: change these to individual keys
     public boolean horizontalHeld = false;
     public boolean softDropHeld = false;
 
@@ -27,22 +31,22 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     @Override
     public void keyPressed(KeyEvent e){
         if (e.getKeyCode() == KeyEvent.VK_Z){
-            if (!rotateHeld){
-                rotateHeld = true;
+            if (!heldZ){
+                heldZ = true;
                 rotate(LEFT);
             }
         }
 
         if (e.getKeyCode() == KeyEvent.VK_UP){
-            if (!rotateHeld){
-                rotateHeld = true;
+            if (!heldUP){
+                heldUP = true;
                 rotate(RIGHT);
             }
         }
         
         if (e.getKeyCode() == KeyEvent.VK_A){
-            if (!rotateHeld){
-                rotateHeld = true;
+            if (!heldA){
+                heldA = true;
                 rotate(TURN);
             }
         }
@@ -51,15 +55,15 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     @Override
     public void keyReleased(KeyEvent e){
         if (e.getKeyCode() == KeyEvent.VK_Z){
-            rotateHeld = false;
+            heldZ = false;
         }
 
         if (e.getKeyCode() == KeyEvent.VK_UP){
-            rotateHeld = false;
+            heldUP = false;
         }
         
         if (e.getKeyCode() == KeyEvent.VK_A){
-            rotateHeld = false;
+            heldA = false;
         }
         
     }
