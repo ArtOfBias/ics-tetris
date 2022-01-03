@@ -61,6 +61,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             }
 
         }
+
+        if (e.getKeyCOde() == KeyEvent.VK_RIGHT){
+            if (!held_RIGHT){
+                held_RIGHT = true;
+                move(RIGHT)
+            }
+        }
     }
 
     @Override
