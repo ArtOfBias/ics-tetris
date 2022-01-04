@@ -20,8 +20,16 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public boolean held_UP = false;
     public boolean held_A = false;
 
+    public static final double FIRST_DELAY = 500;
+    public static final double REPEAT_DELAY = 50;
+
     public boolean held_LEFT = false;
+    public boolean first_LEFT = true;
+    public Stopwatch stopwatchLeft = new Stopwatch();
+
     public boolean held_RIGHT = false;
+    public boolean first_RIGHT = true;
+    public Stopwatch stopwatchRight = new Stopwatch();
 
     public boolean softDropHeld = false;
 
@@ -56,16 +64,39 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         // TODO: unfinished
         if (e.getKeyCode() == KeyEvent.VK_LEFT){
             if (!held_LEFT){
-                held_LEFT = true;
+                stopwatchLeft.start();
                 move(LEFT);
+                held_LEFT = true;
             }
-
+            else {
+                if (first_LEFT && (stopwatchLeft.elapsed() >= FIRST_DELAY)){
+                    stopwatchLeft.restart();
+                    move(LEFT);
+                    first_LEFT = false;
+                }
+                else if ((!first_LEFT) && (stopwatchLeft.elapsed() >= REPEAT_DELAY)){
+                    stopwatchLeft.reset();
+                    move(LEFT);
+                }
+            }
         }
 
         if (e.getKeyCode() == KeyEvent.VK_RIGHT){
             if (!held_RIGHT){
-                held_RIGHT = true;
+                stopwatchRight.start();
                 move(RIGHT);
+                held_RIGHT = true;
+            }
+            else {
+                if (first_RIGHT && (stopwatchRight.elapsed() >= FIRST_DELAY)){
+                    stopwatchRight.restart();
+                    move(RIGHT);
+                    first_RIGHT = false;
+                }
+                else if ((!first_RIGHT) && (stopwatchRight.elapsed() >= REPEAT_DELAY)){
+                    stopwatchRight.reset();
+                    move(RIGHT);
+                }
             }
         }
     }
@@ -121,7 +152,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                     
                 }
                 else {
-                    throw new java.lang.Error("invalid value " + board[x][y] + " in board at " + x + " " + y);
+                    throw new RuntimeException("invalid value " + board[x][y] + " in board at " + x + " " + y);
                 }
             }
         }
@@ -337,7 +368,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             }
         }
         else {
-            throw new java.lang.Error("Invalid rotation type.");
+            throw new IllegalArgumentException("Invalid rotation type.");
         }
     }
 
@@ -459,7 +490,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             }
         }
         else {
-            throw new java.lang.Error("Invalid movement direction.");
+            throw new IllegalArgumentException("Invalid movement direction.");
         }
     }
 

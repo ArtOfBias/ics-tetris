@@ -77,7 +77,7 @@ class Tetrimino {
             anchorTurn = 1;
         }
         else {
-            throw new java.lang.Error("invalid piece type, valid pieces are [o,i,t,l,j,s,z]");
+            throw new IllegalArgumentException("invalid piece type, valid pieces are [o,i,t,l,j,s,z]");
         }
     }
 
