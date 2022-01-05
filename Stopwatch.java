@@ -1,5 +1,5 @@
 public class Stopwatch {
-    // TODO: lapping?
+    // TODO lapping?
     private double startTime;
     private double totalTime = 0;
     private boolean running = false;

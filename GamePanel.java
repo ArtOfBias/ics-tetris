@@ -20,8 +20,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public boolean held_UP = false;
     public boolean held_A = false;
 
-    public static final double FIRST_DELAY = 500;
-    public static final double REPEAT_DELAY = 50;
+    public double das = 120; // delayed auto shift
+    public double arr = 10; // auto repeat rate
 
     public boolean held_LEFT = false;
     public boolean first_LEFT = true;
@@ -61,7 +61,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             }
         }
 
-        // TODO: unfinished
         if (e.getKeyCode() == KeyEvent.VK_LEFT){
             if (!held_LEFT){
                 stopwatchLeft.start();
@@ -69,12 +68,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                 held_LEFT = true;
             }
             else {
-                if (first_LEFT && (stopwatchLeft.elapsed() >= FIRST_DELAY)){
+                if (first_LEFT && (stopwatchLeft.elapsed() >= das)){
                     stopwatchLeft.restart();
                     move(LEFT);
                     first_LEFT = false;
                 }
-                else if ((!first_LEFT) && (stopwatchLeft.elapsed() >= REPEAT_DELAY)){
+                else if ((!first_LEFT) && (stopwatchLeft.elapsed() >= arr)){
                     stopwatchLeft.reset();
                     move(LEFT);
                 }
@@ -88,16 +87,23 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                 held_RIGHT = true;
             }
             else {
-                if (first_RIGHT && (stopwatchRight.elapsed() >= FIRST_DELAY)){
+                if (first_RIGHT && (stopwatchRight.elapsed() >= das)){
                     stopwatchRight.restart();
                     move(RIGHT);
                     first_RIGHT = false;
                 }
-                else if ((!first_RIGHT) && (stopwatchRight.elapsed() >= REPEAT_DELAY)){
+                else if ((!first_RIGHT) && (stopwatchRight.elapsed() >= arr)){
                     stopwatchRight.reset();
                     move(RIGHT);
                 }
             }
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_DOWN){
+
+
+
+
         }
     }
 
@@ -126,7 +132,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public void draw(Graphics g){
         for (int x = 0; x < BOARD_WIDTH; x++){
             for (int y = 0; y < BOARD_HEIGHT; y++){
-                // TODO: finish drawing board
+                // TODO finish drawing board
                 if (board[x][y] == 0){
                     
                 }
@@ -157,9 +163,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             }
         }
 
-        // TODO: draw ghost piece
-        // TODO: draw current piece
-        // TODO: draw queue
+        // TODO draw ghost piece
+        // TODO draw current piece
+        // TODO draw queue
     }
 
     public void rotate(String direction){
@@ -172,14 +178,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         double bestDistance = 100;
         boolean found = false;
 
-        // TODO: add way to update position?
+        // TODO add way to update position?
 
         if (direction.equals("left")){
             rotationAnchorOriginal = currentPiece.block(currentPiece.anchorLeftIndex()).clone();
             anchorOriginal = currentPiece.block(currentPiece.anchorTurnIndex()).clone();
             currentPiece.rotate(LEFT);
 
-            // TODO: feel like there is some logic error here
+            // TODO feel like there is some logic error here
             for (int anchorX = rotationAnchorOriginal[0] - 1; anchorX <= rotationAnchorOriginal[0] + 1; anchorX++){
                 for (int anchorY = rotationAnchorOriginal[1] - 1; anchorY <= rotationAnchorOriginal[1] + 1; anchorY++){
                     counter = 0;
@@ -193,7 +199,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                         }
 
                         if ((testSqaureY < 0) || (testSqaureY >= BOARD_HEIGHT)){
-                            break; // TODO: board height is higher than actual playing field, may need to account
+                            break; // TODO board height is higher than actual playing field, may need to account
                         }
 
                         if (board[testSqaureX][testSqaureY] == 0){
@@ -246,7 +252,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             anchorOriginal = currentPiece.block(currentPiece.anchorTurnIndex()).clone();
             currentPiece.rotate(RIGHT);
 
-            // TODO: feel like there is some logic error here
+            // TODO feel like there is some logic error here
             for (int anchorX = rotationAnchorOriginal[0] - 1; anchorX <= rotationAnchorOriginal[0] + 1; anchorX++){
                 for (int anchorY = rotationAnchorOriginal[1] - 1; anchorY <= rotationAnchorOriginal[1] + 1; anchorY++){
                     counter = 0;
@@ -260,7 +266,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                         }
 
                         if ((testSqaureY < 0) || (testSqaureY >= BOARD_HEIGHT)){
-                            break; // TODO: board height is higher than actual playing field, may need to account
+                            break; // TODO board height is higher than actual playing field, may need to account
                         }
 
                         if (board[testSqaureX][testSqaureY] == 0){
@@ -309,7 +315,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             anchorOriginal = currentPiece.block(currentPiece.anchorTurnIndex()).clone();
             currentPiece.rotate(TURN);
 
-            // TODO: feel like there is some logic error here
+            // TODO feel like there is some logic error here
             for (int anchorX = rotationAnchorOriginal[0] - 1; anchorX <= rotationAnchorOriginal[0] + 1; anchorX++){
                 for (int anchorY = rotationAnchorOriginal[1] - 1; anchorY <= rotationAnchorOriginal[1] + 1; anchorY++){
                     counter = 0;
@@ -323,7 +329,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                         }
 
                         if ((testSqaureY < 0) || (testSqaureY >= BOARD_HEIGHT)){
-                            break; // TODO: board height is higher than actual playing field, may need to account
+                            break; // TODO board height is higher than actual playing field, may need to account
                         }
 
                         if (board[testSqaureX][testSqaureY] == 0){
@@ -407,7 +413,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     }
 
     public void hardDrop(){
-        // TODO: finish hard drop, currently just thinking of setting currentPieceLocation to ghostPieceLocation
+        // TODO finish hard drop, currently just thinking of setting currentPieceLocation to ghostPieceLocation
     }
 
     public void move(String direction){

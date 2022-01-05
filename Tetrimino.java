@@ -120,7 +120,7 @@ class Tetrimino {
         return anchorTurn;
     }
 
-    // TODO: this is a debug function, delete later
+    // TODO this is a debug function, delete later
     public void print(){
         boolean o = false;
         for (int y = 2; y > -3; y--){

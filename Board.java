@@ -12,7 +12,7 @@ public class Board extends Rectangle {
         for (int x = 0; x < BOARD_WIDTH; x++){
             for (int y = 0; y < BOARD_HEIGHT; y++){
                 if (blocks[x][y] == 0){
-                    // TODO: finish drawing board
+                    // TODO finish drawing board
                 }
             }
         }
