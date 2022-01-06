@@ -11,6 +11,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public static final int BOARD_WIDTH = 10;
     public static final int BOARD_HEIGHT = 25;
 
+    public double das = 120; // delayed auto shift
+    public double arr = 10; // auto repeat rate
+
+    public double dropDelay = 1000; // time it takes for piece to fall automatically
+
     public int[][] board = new int[BOARD_WIDTH][BOARD_HEIGHT];
     public Tetrimino currentPiece;
     public int[] currentPieceLocation = new int[2];
@@ -20,9 +25,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public boolean held_UP = false;
     public boolean held_A = false;
 
-    public double das = 120; // delayed auto shift
-    public double arr = 10; // auto repeat rate
-
     public boolean held_LEFT = false;
     public boolean first_LEFT = true;
     public Stopwatch stopwatchLeft = new Stopwatch();
@@ -31,7 +33,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public boolean first_RIGHT = true;
     public Stopwatch stopwatchRight = new Stopwatch();
 
-    public boolean softDropHeld = false;
+    public boolean held_DOWN = false;
+    public boolean first_DOWN = true;
+    public Stopwatch stopwatchDown = new Stopwatch();
+
+    public Stopwatch stopwatchFall = new Stopwatch();
 
     @Override
     public void keyTyped(KeyEvent e){
@@ -100,10 +106,25 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         }
 
         if (e.getKeyCode() == KeyEvent.VK_DOWN){
-
-
-
-
+            if (!held_DOWN){
+                stopwatchDown.start();
+                stopwatchFall.restart();
+                move(DOWN);
+                held_DOWN = true;
+            }
+            else {
+                if (first_DOWN && (stopwatchDown.elapsed() >= das)){
+                    stopwatchDown.restart();
+                    stopwatchFall.restart();
+                    move(DOWN);
+                    first_DOWN = false;
+                }
+                else if ((!first_DOWN) && (stopwatchRight.elapsed() >= arr)){
+                    stopwatchDown.reset();
+                    stopwatchFall.restart();
+                    move(DOWN);
+                }
+            }
         }
     }
 
@@ -120,7 +141,21 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         if (e.getKeyCode() == KeyEvent.VK_A){
             held_A = false;
         }
-        
+
+        if (e.getKeyCode() == KeyEvent.VK_LEFT){
+            held_LEFT = false;
+            first_LEFT = true;
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT){
+            held_RIGHT = false;
+            first_RIGHT = true;
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_DOWN){
+            held_DOWN = false;
+            first_DOWN = true;
+        }
     }
 
     @Override
