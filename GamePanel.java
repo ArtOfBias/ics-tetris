@@ -169,28 +169,28 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             for (int y = 0; y < BOARD_HEIGHT; y++){
                 // TODO finish drawing board
                 if (board[x][y] == 0){
-                    
+                    // empty
                 }
                 else if (board[x][y] == 1){
-
+                    // o piece
                 }
                 else if (board[x][y] == 2){
-                    
+                    // i piece
                 }
                 else if (board[x][y] == 3){
-                    
+                    // t piece
                 }
                 else if (board[x][y] == 4){
-                    
+                    // l piece
                 }
                 else if (board[x][y] == 5){
-                    
+                    // j piece
                 }
                 else if (board[x][y] == 6){
-                    
+                    // s piece
                 }
                 else if (board[x][y] == 7){
-                    
+                    // z piece
                 }
                 else {
                     throw new RuntimeException("invalid value " + board[x][y] + " in board at " + x + " " + y);
