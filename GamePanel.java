@@ -203,12 +203,24 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         // TODO draw queue
     }
 
+    public void placeBlock(){
+        int x = currentPieceLocation[0];
+        int y = currentPieceLocation[1];
+        int squareX;
+        int squareY;
+        for (int i = 0; i < 4; i++){
+            squareX = x + currentPiece.block(i)[0];
+            squareY = y + currentPiece.block(i)[1];
+            board[squareX][squareY] = currentPiece.typeInt();
+        }
+    }
+
     public void rotate(String direction){
         int[] rotationAnchorOriginal;
         int[] anchorOriginal;
         int counter;
-        int testSqaureX = 0;
-        int testSqaureY = 0;
+        int testSquareX = 0;
+        int testSquareY = 0;
         int[] best = new int[2];
         double bestDistance = 100;
         boolean found = false;
@@ -226,18 +238,18 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                     counter = 0;
 
                     for (int i = 0; i < 4; i++){
-                        testSqaureX = anchorX - currentPiece.block(currentPiece.anchorLeftIndex())[0] + currentPiece.block(i)[0];
-                        testSqaureY = anchorY - currentPiece.block(currentPiece.anchorLeftIndex())[1] + currentPiece.block(i)[1];
+                        testSquareX = anchorX - currentPiece.block(currentPiece.anchorLeftIndex())[0] + currentPiece.block(i)[0];
+                        testSquareY = anchorY - currentPiece.block(currentPiece.anchorLeftIndex())[1] + currentPiece.block(i)[1];
 
-                        if ((testSqaureX < 0) || (testSqaureX >= BOARD_WIDTH)){
+                        if ((testSquareX < 0) || (testSquareX >= BOARD_WIDTH)){
                             break;
                         }
 
-                        if ((testSqaureY < 0) || (testSqaureY >= BOARD_HEIGHT)){
+                        if ((testSquareY < 0) || (testSquareY >= BOARD_HEIGHT)){
                             break; // TODO board height is higher than actual playing field, may need to account
                         }
 
-                        if (board[testSqaureX][testSqaureY] == 0){
+                        if (board[testSquareX][testSquareY] == 0){
                             counter++;
                         }
                     }
@@ -293,18 +305,18 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                     counter = 0;
                     
                     for (int i = 0; i < 4; i++){
-                        testSqaureX = anchorX - currentPiece.block(currentPiece.anchorRightIndex())[0] + currentPiece.block(i)[0];
-                        testSqaureY = anchorY - currentPiece.block(currentPiece.anchorRightIndex())[1] + currentPiece.block(i)[1];
+                        testSquareX = anchorX - currentPiece.block(currentPiece.anchorRightIndex())[0] + currentPiece.block(i)[0];
+                        testSquareY = anchorY - currentPiece.block(currentPiece.anchorRightIndex())[1] + currentPiece.block(i)[1];
 
-                        if ((testSqaureX < 0) || (testSqaureX >= BOARD_WIDTH)){
+                        if ((testSquareX < 0) || (testSquareX >= BOARD_WIDTH)){
                             break;
                         }
 
-                        if ((testSqaureY < 0) || (testSqaureY >= BOARD_HEIGHT)){
+                        if ((testSquareY < 0) || (testSquareY >= BOARD_HEIGHT)){
                             break; // TODO board height is higher than actual playing field, may need to account
                         }
 
-                        if (board[testSqaureX][testSqaureY] == 0){
+                        if (board[testSquareX][testSquareY] == 0){
                             counter++;
                         }
                     }
@@ -356,18 +368,18 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                     counter = 0;
 
                     for (int i = 0; i < 4; i++){
-                        testSqaureX = anchorX - currentPiece.block(currentPiece.anchorLeftIndex())[0] + currentPiece.block(i)[0];
-                        testSqaureY = anchorY - currentPiece.block(currentPiece.anchorLeftIndex())[1] + currentPiece.block(i)[1];
+                        testSquareX = anchorX - currentPiece.block(currentPiece.anchorLeftIndex())[0] + currentPiece.block(i)[0];
+                        testSquareY = anchorY - currentPiece.block(currentPiece.anchorLeftIndex())[1] + currentPiece.block(i)[1];
 
-                        if ((testSqaureX < 0) || (testSqaureX >= BOARD_WIDTH)){
+                        if ((testSquareX < 0) || (testSquareX >= BOARD_WIDTH)){
                             break;
                         }
 
-                        if ((testSqaureY < 0) || (testSqaureY >= BOARD_HEIGHT)){
+                        if ((testSquareY < 0) || (testSquareY >= BOARD_HEIGHT)){
                             break; // TODO board height is higher than actual playing field, may need to account
                         }
 
-                        if (board[testSqaureX][testSqaureY] == 0){
+                        if (board[testSquareX][testSquareY] == 0){
                             counter++;
                         }
                     }
@@ -417,25 +429,25 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         int counter;
         int x = currentPieceLocation[0];
         int y;
-        int testSqaureX;
-        int testSqaureY;
+        int testSquareX;
+        int testSquareY;
 
         for (y = currentPieceLocation[1]; y >= 0; y--){
             counter = 0;
 
             for (int i = 0; i < 4; i++){
-                testSqaureX = x + currentPiece.block(i)[0];
-                testSqaureY = y + currentPiece.block(i)[1];
+                testSquareX = x + currentPiece.block(i)[0];
+                testSquareY = y + currentPiece.block(i)[1];
 
-                if ((testSqaureX < 0) || (testSqaureX >= BOARD_WIDTH)){
+                if ((testSquareX < 0) || (testSquareX >= BOARD_WIDTH)){
                     continue;
                 }
 
-                if ((testSqaureY < 0) || (testSqaureY >= BOARD_HEIGHT)){
+                if ((testSquareY < 0) || (testSquareY >= BOARD_HEIGHT)){
                     continue;
                 }
 
-                if (board[testSqaureX][testSqaureY] == 0){
+                if (board[testSquareX][testSquareY] == 0){
                     counter++;
                 }
             }
@@ -455,25 +467,25 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         int counter = 0;
         int x = currentPieceLocation[0];
         int y = currentPieceLocation[1];
-        int testSqaureX;
-        int testSqaureY;
+        int testSquareX;
+        int testSquareY;
 
         if (direction.equals("down")){
             y--;
 
             for (int i = 0; i < 4; i++){
-                testSqaureX = x + currentPiece.block(i)[0];
-                testSqaureY = y + currentPiece.block(i)[1];
+                testSquareX = x + currentPiece.block(i)[0];
+                testSquareY = y + currentPiece.block(i)[1];
 
-                if ((testSqaureX < 0) || (testSqaureX >= BOARD_WIDTH)){
+                if ((testSquareX < 0) || (testSquareX >= BOARD_WIDTH)){
                     continue;
                 }
 
-                if ((testSqaureY < 0) || (testSqaureY >= BOARD_HEIGHT)){
+                if ((testSquareY < 0) || (testSquareY >= BOARD_HEIGHT)){
                     continue;
                 }
 
-                if (board[testSqaureX][testSqaureY] == 0){
+                if (board[testSquareX][testSquareY] == 0){
                     counter++;
                 }
             }
@@ -486,18 +498,18 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             x--;
 
             for (int i = 0; i < 4; i++){
-                testSqaureX = x + currentPiece.block(i)[0];
-                testSqaureY = y + currentPiece.block(i)[1];
+                testSquareX = x + currentPiece.block(i)[0];
+                testSquareY = y + currentPiece.block(i)[1];
 
-                if ((testSqaureX < 0) || (testSqaureX >= BOARD_WIDTH)){
+                if ((testSquareX < 0) || (testSquareX >= BOARD_WIDTH)){
                     continue;
                 }
 
-                if ((testSqaureY < 0) || (testSqaureY >= BOARD_HEIGHT)){
+                if ((testSquareY < 0) || (testSquareY >= BOARD_HEIGHT)){
                     continue;
                 }
 
-                if (board[testSqaureX][testSqaureY] == 0){
+                if (board[testSquareX][testSquareY] == 0){
                     counter++;
                 }
             }
@@ -510,18 +522,18 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             x++;
 
             for (int i = 0; i < 4; i++){
-                testSqaureX = x + currentPiece.block(i)[0];
-                testSqaureY = y + currentPiece.block(i)[1];
+                testSquareX = x + currentPiece.block(i)[0];
+                testSquareY = y + currentPiece.block(i)[1];
 
-                if ((testSqaureX < 0) || (testSqaureX >= BOARD_WIDTH)){
+                if ((testSquareX < 0) || (testSquareX >= BOARD_WIDTH)){
                     continue;
                 }
 
-                if ((testSqaureY < 0) || (testSqaureY >= BOARD_HEIGHT)){
+                if ((testSquareY < 0) || (testSquareY >= BOARD_HEIGHT)){
                     continue;
                 }
 
-                if (board[testSqaureX][testSqaureY] == 0){
+                if (board[testSquareX][testSquareY] == 0){
                     counter++;
                 }
             }
