@@ -7,6 +7,7 @@ class Tetrimino {
     private int anchorRight;
     private int anchorTurn;
     private int temp;
+    private String type;
 
     public Tetrimino(String type){
         changeType(type);
@@ -21,6 +22,7 @@ class Tetrimino {
             anchorLeft = 0;
             anchorRight = 1;
             anchorTurn = 1;
+            this.type = type;
         }
         else if (type.equals("i")){
             blocks[0] = new int[] {-2,0};
@@ -30,6 +32,7 @@ class Tetrimino {
             anchorLeft = 1;
             anchorRight = 2;
             anchorTurn = 2;
+            this.type = type;
         }
         else if (type.equals("t")){
             blocks[0] = new int[] {0,1};
@@ -39,6 +42,7 @@ class Tetrimino {
             anchorLeft = 3;
             anchorRight = 1;
             anchorTurn = 2;
+            this.type = type;
         }
         else if (type.equals("l")){
             blocks[0] = new int[] {1,1};
@@ -48,6 +52,7 @@ class Tetrimino {
             anchorLeft = 2;
             anchorRight = 2;
             anchorTurn = 2;
+            this.type = type;
         }
         else if (type.equals("j")){
             blocks[0] = new int[] {-1,1};
@@ -57,6 +62,7 @@ class Tetrimino {
             anchorLeft = 2;
             anchorRight = 2;
             anchorTurn = 2;
+            this.type = type;
         }
         else if (type.equals("s")){
             blocks[0] = new int[] {0,0};
@@ -66,6 +72,7 @@ class Tetrimino {
             anchorLeft = 0;
             anchorRight = 0;
             anchorTurn = 0;
+            this.type = type;
         }
         else if (type.equals("z")){
             blocks[0] = new int[] {0,0};
@@ -75,6 +82,7 @@ class Tetrimino {
             anchorLeft = 1;
             anchorRight = 1;
             anchorTurn = 1;
+            this.type = type;
         }
         else {
             throw new IllegalArgumentException("invalid piece type, valid pieces are [o,i,t,l,j,s,z]");
@@ -107,6 +115,37 @@ class Tetrimino {
     public int[] block(int blockIndex){
         return blocks[blockIndex];
     }
+
+    public String typeString(){
+        return type;
+    }
+
+    public int typeInt(){
+        if (type.equals("o")){
+            return 1;
+        }
+        else if (type.equals("i")){
+            return 2;
+        }
+        else if (type.equals("t")){
+            return 3;
+        }
+        else if (type.equals("l")){
+            return 4;
+        }
+        else if (type.equals("j")){
+            return 5;
+        }
+        else if (type.equals("s")){
+            return 6;
+        }
+        else if (type.equals("z")){
+            return 7;
+        }
+        else {
+            throw new IllegalArgumentException("invalid piece type, valid pieces are [o,i,t,l,j,s,z]");
+        }
+    }    
 
     public int anchorLeftIndex(){
         return anchorLeft;
