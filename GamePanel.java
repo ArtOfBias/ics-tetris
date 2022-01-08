@@ -411,6 +411,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         else {
             throw new IllegalArgumentException("Invalid rotation type.");
         }
+
+        if (found){
+            currentPieceLocation = best.clone();
+        }
     }
 
     public void ghostPiece(){
