@@ -147,16 +147,19 @@ class Tetrimino {
         }
     }    
 
-    public int anchorLeftIndex(){
-        return anchorLeft;
-    }
-
-    public int anchorRightIndex(){
-        return anchorRight;
-    }
-
-    public int anchorTurnIndex(){
-        return anchorTurn;
+    public int anchorIndex(String direction){
+        if (direction.equals("left")){
+            return anchorLeft;
+        }
+        else if (direction.equals("right")){
+            return anchorRight;
+        }
+        else if (direction.equals("turn")){
+            return anchorTurn;
+        }
+        else {
+            throw new IllegalArgumentException("invalid rotation direction");
+        }
     }
 
     // TODO this is a debug function, delete later

@@ -225,11 +225,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         double bestDistance = 100;
         boolean found = false;
 
-        // TODO add way to update position?
-
         if (direction.equals("left")){
-            rotationAnchorOriginal = currentPiece.block(currentPiece.anchorLeftIndex()).clone();
-            anchorOriginal = currentPiece.block(currentPiece.anchorTurnIndex()).clone();
+            rotationAnchorOriginal = currentPiece.block(currentPiece.anchorIndex(LEFT)).clone();
+            anchorOriginal = currentPiece.block(currentPiece.anchorIndex(TURN)).clone();
             currentPiece.rotate(LEFT);
 
             // TODO feel like there is some logic error here
@@ -238,8 +236,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                     counter = 0;
 
                     for (int i = 0; i < 4; i++){
-                        testSquareX = anchorX - currentPiece.block(currentPiece.anchorLeftIndex())[0] + currentPiece.block(i)[0];
-                        testSquareY = anchorY - currentPiece.block(currentPiece.anchorLeftIndex())[1] + currentPiece.block(i)[1];
+                        testSquareX = anchorX - currentPiece.block(currentPiece.anchorIndex(LEFT))[0] + currentPiece.block(i)[0];
+                        testSquareY = anchorY - currentPiece.block(currentPiece.anchorIndex(LEFT))[1] + currentPiece.block(i)[1];
 
                         if ((testSquareX < 0) || (testSquareX >= BOARD_WIDTH)){
                             break;
@@ -285,18 +283,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                     }
                 }
             }
-
-            if (found){
-                currentPieceLocation[0] = best[0];
-                currentPieceLocation[1] = best[1];
-            }
-            else {
-                currentPiece.rotate(RIGHT);
-            }
         }
         else if (direction.equals("right")){
-            rotationAnchorOriginal = currentPiece.block(currentPiece.anchorRightIndex()).clone();
-            anchorOriginal = currentPiece.block(currentPiece.anchorTurnIndex()).clone();
+            rotationAnchorOriginal = currentPiece.block(currentPiece.anchorIndex(RIGHT)).clone();
+            anchorOriginal = currentPiece.block(currentPiece.anchorIndex(TURN)).clone();
             currentPiece.rotate(RIGHT);
 
             // TODO feel like there is some logic error here
@@ -305,8 +295,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                     counter = 0;
                     
                     for (int i = 0; i < 4; i++){
-                        testSquareX = anchorX - currentPiece.block(currentPiece.anchorRightIndex())[0] + currentPiece.block(i)[0];
-                        testSquareY = anchorY - currentPiece.block(currentPiece.anchorRightIndex())[1] + currentPiece.block(i)[1];
+                        testSquareX = anchorX - currentPiece.block(currentPiece.anchorIndex(RIGHT))[0] + currentPiece.block(i)[0];
+                        testSquareY = anchorY - currentPiece.block(currentPiece.anchorIndex(RIGHT))[1] + currentPiece.block(i)[1];
 
                         if ((testSquareX < 0) || (testSquareX >= BOARD_WIDTH)){
                             break;
@@ -352,14 +342,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                     }
                 }
             }
-
-            if (!found){
-                currentPiece.rotate(LEFT);
-            }
         }
         else if (direction.equals("turn")){
-            rotationAnchorOriginal = currentPiece.block(currentPiece.anchorTurnIndex()).clone();
-            anchorOriginal = currentPiece.block(currentPiece.anchorTurnIndex()).clone();
+            rotationAnchorOriginal = currentPiece.block(currentPiece.anchorIndex(TURN)).clone();
+            anchorOriginal = currentPiece.block(currentPiece.anchorIndex(TURN)).clone();
             currentPiece.rotate(TURN);
 
             // TODO feel like there is some logic error here
@@ -368,8 +354,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                     counter = 0;
 
                     for (int i = 0; i < 4; i++){
-                        testSquareX = anchorX - currentPiece.block(currentPiece.anchorLeftIndex())[0] + currentPiece.block(i)[0];
-                        testSquareY = anchorY - currentPiece.block(currentPiece.anchorLeftIndex())[1] + currentPiece.block(i)[1];
+                        testSquareX = anchorX - currentPiece.block(currentPiece.anchorIndex(LEFT))[0] + currentPiece.block(i)[0];
+                        testSquareY = anchorY - currentPiece.block(currentPiece.anchorIndex(LEFT))[1] + currentPiece.block(i)[1];
 
                         if ((testSquareX < 0) || (testSquareX >= BOARD_WIDTH)){
                             break;
@@ -415,17 +401,19 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                     }
                 }
             }
-
-            if (!found){
-                currentPiece.rotate(TURN);
-            }
         }
         else {
             throw new IllegalArgumentException("Invalid rotation type.");
         }
 
         if (found){
-            currentPieceLocation = best.clone();
+            currentPieceLocation[0] = best[0] - currentPiece.block(currentPiece.anchorIndex(direction))[0];
+            currentPieceLocation[1] = best[1] - currentPiece.block(currentPiece.anchorIndex(direction))[1];
+        }
+        else {
+            for (int i = 0; i < 3; i++){
+                currentPiece.rotate(direction);
+            }
         }
     }
 
