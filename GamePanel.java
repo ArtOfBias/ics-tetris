@@ -8,13 +8,18 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public static final String RIGHT = "right";
     public static final String TURN = "turn";
     public static final String DOWN = "down";
+
     public static final int BOARD_WIDTH = 10;
+    public static final int END_HEIGHT = 20;
     public static final int BOARD_HEIGHT = 25;
+
+    public static final int LOCK_TIME = 500;
 
     public double das = 120; // delayed auto shift
     public double arr = 10; // auto repeat rate
 
     public double dropDelay = 1000; // time it takes for piece to fall automatically
+    // TODO this should be dynamic and change with levels
 
     public int[][] board = new int[BOARD_WIDTH][BOARD_HEIGHT];
     public Tetrimino currentPiece;
@@ -38,6 +43,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public Stopwatch stopwatchDown = new Stopwatch();
 
     public Stopwatch stopwatchFall = new Stopwatch();
+
+    public Stopwatch stopwatchLock = new Stopwatch();
 
     @Override
     public void keyTyped(KeyEvent e){
@@ -67,6 +74,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             }
         }
 
+        // TODO possible logic error, stopwatch does not reset after key release?
         if (e.getKeyCode() == KeyEvent.VK_LEFT){
             if (!held_LEFT){
                 stopwatchLeft.start();
@@ -160,8 +168,32 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
     @Override
     public void run(){
-        // TODO Auto-generated method stub
-        
+        // TODO not sure if this implementation will actually work
+        // TODO current code only supports one playthrough
+        boolean end = false;
+
+        while (true){
+
+
+            if (currentPieceLocation[1] == ghostPieceLocation[1]){
+                stopwatchLock.start();
+
+                if (stopwatchLock.elapsed() >= 500){
+                    stopwatchLock.reset();
+                    placeBlock();
+
+                    for (int x = 0; x < BOARD_WIDTH; x++){
+                        if (board[x][END_HEIGHT] != 0){
+                            end = true;
+                        }
+                    }
+    
+                    if (end){
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     public void draw(Graphics g){
@@ -208,6 +240,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         int y = currentPieceLocation[1];
         int squareX;
         int squareY;
+
         for (int i = 0; i < 4; i++){
             squareX = x + currentPiece.block(i)[0];
             squareY = y + currentPiece.block(i)[1];
@@ -230,7 +263,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             anchorOriginal = currentPiece.block(currentPiece.anchorIndex(TURN)).clone();
             currentPiece.rotate(LEFT);
 
-            // TODO feel like there is some logic error here
             for (int anchorX = rotationAnchorOriginal[0] - 1; anchorX <= rotationAnchorOriginal[0] + 1; anchorX++){
                 for (int anchorY = rotationAnchorOriginal[1] - 1; anchorY <= rotationAnchorOriginal[1] + 1; anchorY++){
                     counter = 0;
@@ -244,7 +276,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                         }
 
                         if ((testSquareY < 0) || (testSquareY >= BOARD_HEIGHT)){
-                            break; // TODO board height is higher than actual playing field, may need to account
+                            break;
                         }
 
                         if (board[testSquareX][testSquareY] == 0){
@@ -289,7 +321,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             anchorOriginal = currentPiece.block(currentPiece.anchorIndex(TURN)).clone();
             currentPiece.rotate(RIGHT);
 
-            // TODO feel like there is some logic error here
             for (int anchorX = rotationAnchorOriginal[0] - 1; anchorX <= rotationAnchorOriginal[0] + 1; anchorX++){
                 for (int anchorY = rotationAnchorOriginal[1] - 1; anchorY <= rotationAnchorOriginal[1] + 1; anchorY++){
                     counter = 0;
@@ -303,7 +334,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                         }
 
                         if ((testSquareY < 0) || (testSquareY >= BOARD_HEIGHT)){
-                            break; // TODO board height is higher than actual playing field, may need to account
+                            break;
                         }
 
                         if (board[testSquareX][testSquareY] == 0){
@@ -348,7 +379,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             anchorOriginal = currentPiece.block(currentPiece.anchorIndex(TURN)).clone();
             currentPiece.rotate(TURN);
 
-            // TODO feel like there is some logic error here
             for (int anchorX = rotationAnchorOriginal[0] - 1; anchorX <= rotationAnchorOriginal[0] + 1; anchorX++){
                 for (int anchorY = rotationAnchorOriginal[1] - 1; anchorY <= rotationAnchorOriginal[1] + 1; anchorY++){
                     counter = 0;
@@ -362,7 +392,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                         }
 
                         if ((testSquareY < 0) || (testSquareY >= BOARD_HEIGHT)){
-                            break; // TODO board height is higher than actual playing field, may need to account
+                            break;
                         }
 
                         if (board[testSquareX][testSquareY] == 0){
@@ -452,7 +482,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     }
 
     public void hardDrop(){
-        // TODO finish hard drop, currently just thinking of setting currentPieceLocation to ghostPieceLocation
+        // TODO will probably cause issues if executed at the same time as lockdown timer starts
+        stopwatchLock.reset();
+        currentPieceLocation[1] = ghostPieceLocation[1];
+        placeBlock();
     }
 
     public void move(String direction){
