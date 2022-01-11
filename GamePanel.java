@@ -432,6 +432,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                 }
             }
         }
+
         else {
             throw new IllegalArgumentException("Invalid rotation type.");
         }
@@ -478,6 +479,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                 break;
             }
         }
+
         ghostPieceLocation = new int[] {x,y};
     }
 
