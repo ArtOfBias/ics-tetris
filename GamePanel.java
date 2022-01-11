@@ -26,6 +26,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public int[] currentPieceLocation = new int[2];
     public int[] ghostPieceLocation = new int[2];
 
+    public int hold = 0;
+
     public boolean held_Z = false;
     public boolean held_UP = false;
     public boolean held_A = false;
