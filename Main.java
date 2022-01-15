@@ -19,5 +19,8 @@ class Main {
         a.print();
         a.rotate("turn");
         a.print();
+
+        Draw frame = new Draw();
+        frame.setVisible(true);
     }
 }
