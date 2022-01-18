@@ -15,6 +15,15 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
     public static final int LOCK_TIME = 500;
 
+    public static final int[][] START_POSITIONS = new int[][] {
+        {5,1},
+        {6,1},
+        {5,1},
+        {5,1},
+        {5,2},
+        {5,1}
+    };
+
     public double das = 120; // delayed auto shift
     public double arr = 10; // auto repeat rate
 
@@ -28,9 +37,17 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
     public int hold = 0;
 
+    // variables for handling piece queue
+    public Bag bag1 = new Bag();
+    public Bag bag2 = new Bag();
+    public int bagPosition = 0;
+
     public boolean held_Z = false;
     public boolean held_UP = false;
     public boolean held_A = false;
+    public boolean held_C = false;
+
+    public boolean hold_pressed = false;
 
     public boolean held_LEFT = false;
     public boolean first_LEFT = true;
@@ -76,7 +93,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             }
         }
 
-        // TODO possible logic error, stopwatch does not reset after key release?
         if (e.getKeyCode() == KeyEvent.VK_LEFT){
             if (!held_LEFT){
                 stopwatchLeft.start();
@@ -136,6 +152,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                 }
             }
         }
+
+        if (e.getKeyCode() == KeyEvent.VK_C){
+            if ((!held_C) && (!hold_pressed)){
+                holdPiece();
+                held_C = true;
+                hold_pressed = true;
+            }
+        }
     }
 
     @Override
@@ -155,16 +179,19 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         if (e.getKeyCode() == KeyEvent.VK_LEFT){
             held_LEFT = false;
             first_LEFT = true;
+            stopwatchLeft.reset();
         }
 
         if (e.getKeyCode() == KeyEvent.VK_RIGHT){
             held_RIGHT = false;
             first_RIGHT = true;
+            stopwatchRight.reset();
         }
 
         if (e.getKeyCode() == KeyEvent.VK_DOWN){
             held_DOWN = false;
             first_DOWN = true;
+            stopwatchDown.reset();
         }
     }
 
@@ -180,9 +207,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             if (currentPieceLocation[1] == ghostPieceLocation[1]){
                 stopwatchLock.start();
 
+                // actions once block is locked
                 if (stopwatchLock.elapsed() >= 500){
                     stopwatchLock.reset();
+                    hold_pressed = false;
                     placeBlock();
+                    nextBlock();
 
                     for (int x = 0; x < BOARD_WIDTH; x++){
                         if (board[x][END_HEIGHT] != 0){
@@ -235,19 +265,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         // TODO draw ghost piece
         // TODO draw current piece
         // TODO draw queue
-    }
-
-    public void placeBlock(){
-        int x = currentPieceLocation[0];
-        int y = currentPieceLocation[1];
-        int squareX;
-        int squareY;
-
-        for (int i = 0; i < 4; i++){
-            squareX = x + currentPiece.block(i)[0];
-            squareY = y + currentPiece.block(i)[1];
-            board[squareX][squareY] = currentPiece.typeInt();
-        }
     }
 
     public void rotate(String direction){
@@ -447,6 +464,60 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             for (int i = 0; i < 3; i++){
                 currentPiece.rotate(direction);
             }
+        }
+    }
+
+    public void placeBlock(){
+        int x = currentPieceLocation[0];
+        int y = currentPieceLocation[1];
+        int squareX;
+        int squareY;
+
+        for (int i = 0; i < 4; i++){
+            squareX = x + currentPiece.block(i)[0];
+            squareY = y + currentPiece.block(i)[1];
+            board[squareX][squareY] = currentPiece.typeInt();
+        }
+    }
+
+    public void nextBlock(){
+        currentPieceLocation[1] = BOARD_HEIGHT - 2;
+        int queuePosition = bagPosition % 7;
+
+        if (bagPosition < 7){
+            currentPiece = new Tetrimino(bag1.piece(queuePosition));
+        }
+        else if (bagPosition < 14){
+            currentPiece = new Tetrimino(bag2.piece(queuePosition));
+        }
+        else {
+            throw new IndexOutOfBoundsException();
+        }
+
+        currentPieceLocation = new int[] {START_POSITIONS[currentPiece.typeInt()][0], END_HEIGHT + START_POSITIONS[currentPiece.typeInt()][1] - 1};
+
+        bagPosition++;
+        if (bagPosition == 7){
+            bag1.shuffle();
+        }
+        else if (bagPosition == 14){
+            bag2.shuffle();
+            bagPosition = 0;
+        }
+    }
+
+    // holds the current piece, puts held peice into current piece if held
+    public void holdPiece(){
+        if (hold == 0){
+            hold = currentPiece.typeInt();
+            nextBlock();
+        }
+        else {
+            int temp = hold;
+            currentPieceLocation[1] = BOARD_HEIGHT - 2;
+            hold = currentPiece.typeInt();
+            currentPieceLocation = new int[] {START_POSITIONS[currentPiece.typeInt()][0], END_HEIGHT + START_POSITIONS[currentPiece.typeInt()][1] - 1};
+            currentPiece = new Tetrimino(temp);
         }
     }
 
