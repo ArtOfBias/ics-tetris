@@ -3,7 +3,7 @@ import javax.swing.*;
 
 public class Draw extends JFrame{
 
-    private JButton testButton;
+    //private JButton testButton;
     private JPanel panelMain;
     private GamePanel panel;
 
@@ -19,18 +19,15 @@ public class Draw extends JFrame{
         panelMain.setPreferredSize(new Dimension(200, 40));
         add(panelMain);
 
-        // creating JButton in the main JPanel (white)
-        testButton = new JButton("Button from main class");
-        panelMain.add(testButton);
+        /*testButton = new JButton("Button from main class");
+        panelMain.add(testButton);*/
 
-         // creating new JPanelOne object from JPanelOne class containing black JPanel
         panel = new GamePanel();
 
         // adding black JPanel to main JPanel (white)
         panelMain.add(panel);
 
         pack();
-
     }
     
     
