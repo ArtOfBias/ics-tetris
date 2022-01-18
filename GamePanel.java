@@ -4,6 +4,9 @@ import javax.swing.*;
 
 
 public class GamePanel extends JPanel implements Runnable, KeyListener{
+    public static final int GAME_WIDTH = 500;
+    public static final int GAME_HEIGHT = 500;
+
     public static final String LEFT = "left";
     public static final String RIGHT = "right";
     public static final String TURN = "turn";
@@ -27,7 +30,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public double das = 120; // delayed auto shift
     public double arr = 10; // auto repeat rate
 
-    public double dropDelay = 1000; // time it takes for piece to fall automatically
+    public double fallDelay = 1000; // time it takes for piece to fall automatically
     // TODO this should be dynamic and change with levels
 
     public int[][] board = new int[BOARD_WIDTH][BOARD_HEIGHT];
@@ -64,6 +67,19 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public Stopwatch stopwatchFall = new Stopwatch();
 
     public Stopwatch stopwatchLock = new Stopwatch();
+
+    public Thread gameThread;
+    public Graphics graphics;
+    public Image image;
+
+    public GamePanel(){
+        this.setFocusable(true);
+        this.addKeyListener(this);
+        this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
+
+        gameThread = new Thread(this); 
+        gameThread.start();
+    }
 
     @Override
     public void keyTyped(KeyEvent e){
@@ -200,10 +216,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         // TODO not sure if this implementation will actually work
         // TODO current code only supports one playthrough
         boolean end = false;
+        nextBlock();
 
         while (true){
-
-
             if (currentPieceLocation[1] == ghostPieceLocation[1]){
                 stopwatchLock.start();
 
@@ -216,16 +231,35 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
                     for (int x = 0; x < BOARD_WIDTH; x++){
                         if (board[x][END_HEIGHT] != 0){
+                            repaint();
                             end = true;
                         }
                     }
-    
+
                     if (end){
                         break;
                     }
                 }
             }
+            else {
+                // TODO maybe pause instead of reset
+                stopwatchLock.reset();
+
+                if (stopwatchFall.elapsed() >= fallDelay){
+                    currentPieceLocation[1]--;
+                    stopwatchFall.restart();
+                    repaint();
+                }
+            }
         }
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        image = createImage(GAME_WIDTH, GAME_HEIGHT);
+        graphics = image.getGraphics();
+        draw(graphics);
+        g.drawImage(image, 0, 0, this);
     }
 
     public void draw(Graphics g){
@@ -459,6 +493,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         if (found){
             currentPieceLocation[0] = best[0] - currentPiece.block(currentPiece.anchorIndex(direction))[0];
             currentPieceLocation[1] = best[1] - currentPiece.block(currentPiece.anchorIndex(direction))[1];
+            repaint();
         }
         else {
             for (int i = 0; i < 3; i++){
@@ -478,6 +513,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             squareY = y + currentPiece.block(i)[1];
             board[squareX][squareY] = currentPiece.typeInt();
         }
+
+        repaint();
     }
 
     public void nextBlock(){
@@ -504,6 +541,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             bag2.shuffle();
             bagPosition = 0;
         }
+
+        ghostPiece();
+        repaint();
     }
 
     // holds the current piece, puts held peice into current piece if held
@@ -645,6 +685,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         else {
             throw new IllegalArgumentException("Invalid movement direction.");
         }
+
+        ghostPiece();
     }
 
     public double distance(int[] point1, int[] point2){

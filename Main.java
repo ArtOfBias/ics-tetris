@@ -9,7 +9,6 @@
 
 class Main {
     public static void main(String[] args){
-        Draw frame = new Draw();
-        frame.setVisible(true);
+        GameFrame frame = new GameFrame();
     }
 }
