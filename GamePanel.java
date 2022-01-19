@@ -20,6 +20,17 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
     public static final int LOCK_TIME = 500;
 
+    public static final Color[] PIECE_COLOUR = new Color[] {
+        Color.BLACK,
+        Color.YELLOW,
+        Color.CYAN,
+        Color.MAGENTA,
+        new Color(255, 127, 0), // orange
+        Color.BLUE,
+        Color.GREEN,
+        Color.RED
+    };
+
     public static final int[][] START_POSITIONS = new int[][] {
         {5,1},
         {6,1},
@@ -192,9 +203,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     @Override
     public void keyReleased(KeyEvent e){
         if (e.getKeyCode() == KeyEvent.VK_Z){
-            if (!held_Z){
-                throw new RuntimeException("f");
-            }
             held_Z = false;
         }
 
@@ -223,6 +231,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             first_DOWN = true;
             stopwatchDown.reset();
         }
+
+        if (e.getKeyCode() == KeyEvent.VK_C){
+            held_C = false;
+        }
     }
 
     @Override
@@ -242,7 +254,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                 if (stopwatchLock.elapsed() >= 500){
                     stopwatchLock.reset();
                     hold_pressed = false;
+                    first_DOWN = true;
                     placeBlock();
+
+                    matchPatterns();
+
                     nextBlock();
 
                     for (int x = 0; x < BOARD_WIDTH; x++){
@@ -262,7 +278,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                 stopwatchLock.reset();
 
                 if (stopwatchFall.elapsed() >= fallDelay){
-                    currentPieceLocation[1]--;
+                    move(DOWN);
                     stopwatchFall.restart();
                     repaint();
                 }
@@ -283,43 +299,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         int realY;
 
         for (int x = 0; x < BOARD_WIDTH; x++){
-            for (int y = 0; y < BOARD_HEIGHT; y++){
-                // TODO finish drawing board
-                if (board[x][y] == 0){
-                    // empty
-                    g.setColor(Color.black);
-                }
-                else if (board[x][y] == 1){
-                    // o piece
-                    g.setColor(Color.YELLOW);
-                }
-                else if (board[x][y] == 2){
-                    // i piece
-                    g.setColor(Color.CYAN);
-                }
-                else if (board[x][y] == 3){
-                    // t piece
-                    g.setColor(Color.MAGENTA);
-                }
-                else if (board[x][y] == 4){
-                    // l piece
-                    g.setColor(Color.ORANGE);
-                }
-                else if (board[x][y] == 5){
-                    // j piece
-                    g.setColor(Color.BLUE);
-                }
-                else if (board[x][y] == 6){
-                    // s piece
-                    g.setColor(Color.GREEN);
-                }
-                else if (board[x][y] == 7){
-                    // z piece
-                    g.setColor(Color.RED);
-                }
-                else {
-                    throw new RuntimeException("invalid value " + board[x][y] + " in board at " + x + " " + y);
-                }
+            for (int y = 0; y < END_HEIGHT; y++){
+                g.setColor(PIECE_COLOUR[board[x][y]]);
 
                 realX = (GAME_WIDTH - BOARD_WIDTH * SCALE) / 2 + x * SCALE;
                 realY = (GAME_HEIGHT - (y + 1) * SCALE);
@@ -327,7 +308,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             }
         }
 
-        g.setColor(Color.GRAY);
+        g.setColor(PIECE_COLOUR[currentPiece.typeInt()].darker().darker().darker());
 
         for (int i = 0; i < 4; i++){
             realX = (GAME_WIDTH - BOARD_WIDTH * SCALE) / 2 + (ghostPieceLocation[0] + currentPiece.block(i)[0]) * SCALE;
@@ -335,7 +316,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             g.fillRect(realX, realY, SCALE, SCALE);
         }
 
-        g.setColor(Color.WHITE);
+        g.setColor(PIECE_COLOUR[currentPiece.typeInt()]);
 
         for (int i = 0; i < 4; i++){
             realX = (GAME_WIDTH - BOARD_WIDTH * SCALE) / 2 + (currentPieceLocation[0] + currentPiece.block(i)[0]) * SCALE;
@@ -351,7 +332,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     }
 
     public void rotate(String direction){
-        // TODO rotation can phase out of
         int[] rotationAnchorOriginal = new int[2];
         int[] anchorOriginal = new int[2];
         int counter;
@@ -618,7 +598,32 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         }
     }
 
+    public void matchPatterns(){
+        // TODO add t-spin, tetrises, etc
+        int counter;
+        int x;
+        int y;
+
+        for (y = 0; y < END_HEIGHT; y++){
+            counter = 0;
+            for (x = 0; x < BOARD_WIDTH; x++){
+                if (board[x][y] == 0){
+                    counter++;
+                }
+            }
+
+            if (counter == 0){
+                for (int i = 0; i < BOARD_WIDTH; i++){
+                    for (int j = y; j < END_HEIGHT; j++){
+                        board[i][j] = board[i][j + 1];
+                    }
+                }
+            }
+        }
+    }
+
     public void ghostPiece(){
+        // TODO map space key
         int counter;
         int x = currentPieceLocation[0];
         int y;
