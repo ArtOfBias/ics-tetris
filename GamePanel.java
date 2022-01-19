@@ -235,8 +235,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             for (int y = 0; y < BOARD_HEIGHT; y++){
                 // TODO finish drawing board
                 if (board[x][y] == 0){
-                    g.fillRect(0, 0, getWidth()-1, getHeight()-1);
-                    g.drawLine(0, 0, getWidth()-1, getHeight()-1);
+                    g.setColor(Color.blue);
+                    g.drawRect(50, 50, 100, 100);
+                    g.setColor(Color.gray);
+                    g.fillRect(50, 50, 100, 100);
+                    g.setColor(Color.white);
+                    g.drawLine(50, 50, 100, 100);
                 }
                 else if (board[x][y] == 1){
                     // o piece
