@@ -37,4 +37,8 @@ public class Stopwatch {
     public double elapsed(){
         return totalTime + System.currentTimeMillis() - startTime;
     }
+
+    public boolean isRunning(){
+        return running;
+    }
 }

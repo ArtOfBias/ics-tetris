@@ -4,6 +4,8 @@ import javax.swing.*;
 
 
 public class GamePanel extends JPanel implements Runnable, KeyListener{
+    public static final int GAME_WIDTH = 500;
+    public static final int GAME_HEIGHT = 500;
 
     public static final String LEFT = "left";
     public static final String RIGHT = "right";
@@ -14,11 +16,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public static final int END_HEIGHT = 20;
     public static final int BOARD_HEIGHT = 25;
 
+    public static final int SCALE = 10;
+
     public static final int LOCK_TIME = 500;
 
     public static final int[][] START_POSITIONS = new int[][] {
         {5,1},
         {6,1},
+        {5,1},
         {5,1},
         {5,1},
         {5,2},
@@ -28,7 +33,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public double das = 120; // delayed auto shift
     public double arr = 10; // auto repeat rate
 
-    public double dropDelay = 1000; // time it takes for piece to fall automatically
+    public double fallDelay = 1000; // time it takes for piece to fall automatically
     // TODO this should be dynamic and change with levels
 
     public int[][] board = new int[BOARD_WIDTH][BOARD_HEIGHT];
@@ -50,6 +55,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
     public boolean hold_pressed = false;
 
+    // TODO: use list instead?
+    // the problem with java is it has no dictionaries, making code that accesses this as a list very hard to read
+
     public boolean held_LEFT = false;
     public boolean first_LEFT = true;
     public Stopwatch stopwatchLeft = new Stopwatch();
@@ -60,11 +68,28 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
     public boolean held_DOWN = false;
     public boolean first_DOWN = true;
+
+    public boolean held_SPACE = false;
+
     public Stopwatch stopwatchDown = new Stopwatch();
 
     public Stopwatch stopwatchFall = new Stopwatch();
 
     public Stopwatch stopwatchLock = new Stopwatch();
+
+    public Thread gameThread;
+    public Graphics graphics;
+    public Image image;
+
+    public GamePanel(){
+        this.setFocusable(true);
+        this.addKeyListener(this);
+        this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
+        this.addKeyListener(this);
+
+        gameThread = new Thread(this); 
+        gameThread.start();
+    }
 
     @Override
     public void keyTyped(KeyEvent e){
@@ -73,6 +98,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
     @Override
     public void keyPressed(KeyEvent e){
+        // TODO rotation keys only work sometimes
         if (e.getKeyCode() == KeyEvent.VK_Z){
             if (!held_Z){
                 held_Z = true;
@@ -201,12 +227,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         // TODO not sure if this implementation will actually work
         // TODO current code only supports one playthrough
         boolean end = false;
+        nextBlock();
 
         while (true){
-
-
+            repaint();
             if (currentPieceLocation[1] == ghostPieceLocation[1]){
-                stopwatchLock.start();
+                if (!stopwatchFall.isRunning()){
+                    stopwatchLock.start();
+                }
 
                 // actions once block is locked
                 if (stopwatchLock.elapsed() >= 500){
@@ -217,57 +245,102 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
                     for (int x = 0; x < BOARD_WIDTH; x++){
                         if (board[x][END_HEIGHT] != 0){
+                            repaint();
                             end = true;
                         }
                     }
-    
+
                     if (end){
                         break;
                     }
                 }
             }
+            else {
+                // TODO maybe pause instead of reset
+                stopwatchLock.reset();
+
+                if (stopwatchFall.elapsed() >= fallDelay){
+                    currentPieceLocation[1]--;
+                    stopwatchFall.restart();
+                    repaint();
+                }
+            }
         }
     }
 
-    public void paint(Graphics g){
-        super.paint(g);
+    @Override
+    public void paint(Graphics g) {
+        image = createImage(GAME_WIDTH, GAME_HEIGHT);
+        graphics = image.getGraphics();
+        draw(graphics);
+        g.drawImage(image, 0, 0, this);
+    }
+
+    public void draw(Graphics g){
+        int realX;
+        int realY;
+
         for (int x = 0; x < BOARD_WIDTH; x++){
             for (int y = 0; y < BOARD_HEIGHT; y++){
                 // TODO finish drawing board
                 if (board[x][y] == 0){
-                    g.setColor(Color.blue);
-                    g.drawRect(50, 50, 100, 100);
-                    g.setColor(Color.gray);
-                    g.fillRect(50, 50, 100, 100);
-                    g.setColor(Color.white);
-                    g.drawLine(50, 50, 100, 100);
+                    // empty
+                    g.setColor(Color.black);
                 }
                 else if (board[x][y] == 1){
                     // o piece
+                    g.setColor(Color.YELLOW);
                 }
                 else if (board[x][y] == 2){
                     // i piece
+                    g.setColor(Color.CYAN);
                 }
                 else if (board[x][y] == 3){
                     // t piece
+                    g.setColor(Color.MAGENTA);
                 }
                 else if (board[x][y] == 4){
                     // l piece
+                    g.setColor(Color.ORANGE);
                 }
                 else if (board[x][y] == 5){
                     // j piece
+                    g.setColor(Color.BLUE);
                 }
                 else if (board[x][y] == 6){
                     // s piece
+                    g.setColor(Color.GREEN);
                 }
                 else if (board[x][y] == 7){
                     // z piece
+                    g.setColor(Color.RED);
                 }
                 else {
                     throw new RuntimeException("invalid value " + board[x][y] + " in board at " + x + " " + y);
                 }
+
+                realX = (GAME_WIDTH - BOARD_WIDTH * SCALE) / 2 + x * SCALE;
+                realY = (GAME_HEIGHT - (y + 1) * SCALE);
+                g.fillRect(realX, realY, SCALE, SCALE);
             }
         }
+
+        g.setColor(Color.GRAY);
+
+        for (int i = 0; i < 4; i++){
+            realX = (GAME_WIDTH - BOARD_WIDTH * SCALE) / 2 + (ghostPieceLocation[0] + currentPiece.block(i)[0]) * SCALE;
+            realY = (GAME_HEIGHT - (ghostPieceLocation[1] + currentPiece.block(i)[1] + 1) * SCALE);
+            g.fillRect(realX, realY, SCALE, SCALE);
+        }
+
+        g.setColor(Color.WHITE);
+
+        for (int i = 0; i < 4; i++){
+            realX = (GAME_WIDTH - BOARD_WIDTH * SCALE) / 2 + (currentPieceLocation[0] + currentPiece.block(i)[0]) * SCALE;
+            realY = (GAME_HEIGHT - (currentPieceLocation[1] + currentPiece.block(i)[1] + 1) * SCALE);
+            g.fillRect(realX, realY, SCALE, SCALE);
+        }
+
 
         // TODO draw ghost piece
         // TODO draw current piece
@@ -275,6 +348,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     }
 
     public void rotate(String direction){
+        // TODO rotation can phase out of
         int[] rotationAnchorOriginal;
         int[] anchorOriginal;
         int counter;
@@ -464,8 +538,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         }
 
         if (found){
-            currentPieceLocation[0] = best[0] - currentPiece.block(currentPiece.anchorIndex(direction))[0];
-            currentPieceLocation[1] = best[1] - currentPiece.block(currentPiece.anchorIndex(direction))[1];
+            currentPieceLocation[0] += best[0] - currentPiece.block(currentPiece.anchorIndex(direction))[0];
+            currentPieceLocation[1] += best[1] - currentPiece.block(currentPiece.anchorIndex(direction))[1];
+            ghostPiece();
+            repaint();
         }
         else {
             for (int i = 0; i < 3; i++){
@@ -485,6 +561,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             squareY = y + currentPiece.block(i)[1];
             board[squareX][squareY] = currentPiece.typeInt();
         }
+
+        repaint();
     }
 
     public void nextBlock(){
@@ -501,7 +579,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             throw new IndexOutOfBoundsException();
         }
 
-        currentPieceLocation = new int[] {START_POSITIONS[currentPiece.typeInt()][0], END_HEIGHT + START_POSITIONS[currentPiece.typeInt()][1] - 1};
+        currentPieceLocation = new int[] {START_POSITIONS[currentPiece.typeInt() - 1][0], END_HEIGHT + START_POSITIONS[currentPiece.typeInt() - 1][1] - 1};
 
         bagPosition++;
         if (bagPosition == 7){
@@ -511,6 +589,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             bag2.shuffle();
             bagPosition = 0;
         }
+
+        ghostPiece();
+        repaint();
     }
 
     // holds the current piece, puts held peice into current piece if held
@@ -523,7 +604,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             int temp = hold;
             currentPieceLocation[1] = BOARD_HEIGHT - 2;
             hold = currentPiece.typeInt();
-            currentPieceLocation = new int[] {START_POSITIONS[currentPiece.typeInt()][0], END_HEIGHT + START_POSITIONS[currentPiece.typeInt()][1] - 1};
+            currentPieceLocation = new int[] {START_POSITIONS[currentPiece.typeInt() - 1][0], END_HEIGHT + START_POSITIONS[currentPiece.typeInt() - 1][1] - 1};
             currentPiece = new Tetrimino(temp);
         }
     }
@@ -560,7 +641,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             }
         }
 
-        ghostPieceLocation = new int[] {x,y};
+        ghostPieceLocation = new int[] {x,y + 1};
     }
 
     public void hardDrop(){
@@ -652,6 +733,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         else {
             throw new IllegalArgumentException("Invalid movement direction.");
         }
+
+        ghostPiece();
     }
 
     public double distance(int[] point1, int[] point2){
