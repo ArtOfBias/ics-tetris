@@ -1,11 +1,11 @@
-import java.awt.*;
+/*import java.awt.*;
 import javax.swing.*;
 
 public class Board extends JFrame{
 
     //private JButton testButton;
     //private JPanel panelMain;
-    private GamePanel panel;
+    /*private GamePanel panel;
 
     public Board(){
         this.setTitle("Tetris");
@@ -21,7 +21,7 @@ public class Board extends JFrame{
 
         /*testButton = new JButton("Button from main class");
         panelMain.add(testButton);*/
-
+/*
         panel = new GamePanel();
 
         // adding black JPanel to main JPanel (white)
@@ -31,7 +31,7 @@ public class Board extends JFrame{
         panel.setPreferredSize(new Dimension(420, 420));
         add(panel);
         pack();
-    }
+    }*/
     
     
     /*public void paint(Graphics g){
@@ -48,5 +48,6 @@ public class Board extends JFrame{
             System.exit(0);
         }
     };*/
-
+/*
 }
+*/
