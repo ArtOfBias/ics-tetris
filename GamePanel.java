@@ -45,11 +45,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
     public double fallDelay = 1000; // time it takes for piece to fall automatically
     // TODO this should be dynamic and change with levels
+    // TODO levels
 
-    public int[][] board = new int[BOARD_WIDTH][BOARD_HEIGHT];
-    public Tetrimino currentPiece;
-    public int[] currentPieceLocation = new int[2];
-    public int[] ghostPieceLocation = new int[2];
+    public int[][] board = new int[BOARD_WIDTH][BOARD_HEIGHT]; // board, where placed pieces are stored
+    public Tetrimino currentPiece; // current piece being controlled by player
+    public int[] currentPieceLocation = new int[2]; // location of current piece
+    public int[] ghostPieceLocation = new int[2]; // location of ghost piece, projection of current piece
 
     public int hold = 0;
 
@@ -58,33 +59,33 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public Bag bag2 = new Bag();
     public int bagPosition = 0;
 
+    // the following booleans indicate whether the corresponding key is held down
     public boolean held_Z = false;
     public boolean held_UP = false;
     public boolean held_A = false;
     public boolean held_C = false;
     public boolean held_SPACE = false;
+    public boolean held_LEFT = false;
+    public boolean held_RIGHT = false;
+    public boolean held_DOWN = false;
 
     public boolean hold_pressed = false;
 
     // TODO: use list instead?
     // the problem with java is it has no dictionaries, making code that accesses this as a list very hard to read
 
-    public boolean held_LEFT = false;
-    public boolean first_LEFT = true;
-    public Stopwatch stopwatchLeft = new Stopwatch();
-
-    public boolean held_RIGHT = false;
+    // the following booleans indicate whether this is the first time the corresponding is being pressed
+    public boolean first_LEFT  = true;
     public boolean first_RIGHT = true;
+    public boolean first_DOWN  = true;
+
+    // the following help time the automatic repetition mechanic
+    public Stopwatch stopwatchLeft  = new Stopwatch();
     public Stopwatch stopwatchRight = new Stopwatch();
+    public Stopwatch stopwatchDown  = new Stopwatch();
 
-    public boolean held_DOWN = false;
-    public boolean first_DOWN = true;
-
-    public Stopwatch stopwatchDown = new Stopwatch();
-
-    public Stopwatch stopwatchFall = new Stopwatch();
-
-    public Stopwatch stopwatchLock = new Stopwatch();
+    public Stopwatch stopwatchFall = new Stopwatch(); // stopwatch for automatic falling
+    public Stopwatch stopwatchLock = new Stopwatch(); // stopwatch for lockdown timer
 
     public Thread gameThread;
     public Graphics graphics;
@@ -105,8 +106,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
     }
 
-    @Override
     // TODO probably want to use threads for this, rethink how this is done
+    // alternatively, function with a bunch of if statements that runs everytime (more resource-heavy?)
+    @Override
     public void keyPressed(KeyEvent e){
         if (e.getKeyCode() == KeyEvent.VK_Z){
             if (!held_Z){
@@ -254,20 +256,20 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
         while (true){
             repaint();
+
             if (currentPieceLocation[1] == ghostPieceLocation[1]){
                 if (!stopwatchLock.isRunning()){
                     stopwatchLock.start();
                 }
 
                 // actions once block is locked
-                if (stopwatchLock.elapsed() >= 500){
+                if (stopwatchLock.elapsed() >= 1000){
                     stopwatchLock.reset();
                     hold_pressed = false;
                     first_DOWN = true;
+
                     placeBlock();
-
                     matchPatterns();
-
                     nextBlock();
 
                     for (int x = 0; x < BOARD_WIDTH; x++){
@@ -310,7 +312,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         for (int x = 0; x < BOARD_WIDTH; x++){
             for (int y = 0; y < END_HEIGHT; y++){
                 g.setColor(PIECE_COLOUR[board[x][y]]);
-
                 realX = (GAME_WIDTH - BOARD_WIDTH * SCALE) / 2 + x * SCALE;
                 realY = (GAME_HEIGHT - (y + 1) * SCALE);
                 g.fillRect(realX, realY, SCALE, SCALE);
@@ -320,6 +321,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         g.setColor(PIECE_COLOUR[currentPiece.typeInt()].darker().darker().darker());
 
         for (int i = 0; i < 4; i++){
+            if (ghostPieceLocation[1] + currentPiece.block(i)[1] >= END_HEIGHT){
+                continue;
+            }
             realX = (GAME_WIDTH - BOARD_WIDTH * SCALE) / 2 + (ghostPieceLocation[0] + currentPiece.block(i)[0]) * SCALE;
             realY = (GAME_HEIGHT - (ghostPieceLocation[1] + currentPiece.block(i)[1] + 1) * SCALE);
             g.fillRect(realX, realY, SCALE, SCALE);
@@ -336,11 +340,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             g.fillRect(realX, realY, SCALE, SCALE);
         }
 
-
-        // TODO draw ghost piece
-        // TODO draw current piece
-        // TODO, above needs improvement
         // TODO draw queue
+        // TODO draw hold
     }
 
     public void rotate(String direction){
