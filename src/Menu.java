@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 public class Menu extends JFrame implements ActionListener{
+    GameFrame frame;
     JButton play;
     JButton exit;
 
@@ -38,11 +39,13 @@ public class Menu extends JFrame implements ActionListener{
 
     public void actionPerformed(ActionEvent e){
         if(e.getSource() == play){
-            getContentPane().setBackground(Color.blue);
+            frame = new GameFrame();
+            this.dispose();
         }
         else {
             this.dispose();
         }
         repaint();
     }
+
 }
