@@ -4,6 +4,7 @@ import javax.swing.*;
 
 
 public class GamePanel extends JPanel implements Runnable, KeyListener{
+
     public static final String LEFT = "left";
     public static final String RIGHT = "right";
     public static final String TURN = "turn";
@@ -228,12 +229,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         }
     }
 
-    public void draw(Graphics g){
+    public void paint(Graphics g){
+        super.paint(g);
         for (int x = 0; x < BOARD_WIDTH; x++){
             for (int y = 0; y < BOARD_HEIGHT; y++){
                 // TODO finish drawing board
                 if (board[x][y] == 0){
-                    // empty
+                    g.fillRect(0, 0, getWidth()-1, getHeight()-1);
+                    g.drawLine(0, 0, getWidth()-1, getHeight()-1);
                 }
                 else if (board[x][y] == 1){
                     // o piece
