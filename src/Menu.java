@@ -3,7 +3,7 @@ package src;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-public class Menu extends JFrame{
+public class Menu extends JFrame implements ActionListener{
     JButton play;
     JButton exit;
 
@@ -16,7 +16,9 @@ public class Menu extends JFrame{
         this.setVisible(true);
 
         play = new JButton("Play");
+        play.addActionListener(this);
         exit = new JButton("Exit");
+        exit.addActionListener(this);
 
         Container c = getContentPane();
         c.setLayout(null);
@@ -32,5 +34,15 @@ public class Menu extends JFrame{
         super.paint(g);
         g.setFont(new Font("TimesRoman", Font.PLAIN, 50)); 
         g.drawString("Tetris", 195, 150);
+    }
+
+    public void actionPerformed(ActionEvent e){
+        if(e.getSource() == play){
+            getContentPane().setBackground(Color.blue);
+        }
+        else {
+            this.dispose();
+        }
+        repaint();
     }
 }
