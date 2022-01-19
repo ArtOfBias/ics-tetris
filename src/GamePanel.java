@@ -60,6 +60,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public Bag bag2 = new Bag();
     public int bagPosition = 0;
 
+    // counts number of lines cleared this level
+    public int levelLines = 0;
+
     // the following booleans indicate whether the corresponding key is held down
     public boolean held_Z = false;
     public boolean held_UP = false;
@@ -92,6 +95,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public Graphics graphics;
     public Image image;
 
+    public boolean end = false;
+
     public GamePanel(){
         this.setFocusable(true);
         this.addKeyListener(this);
@@ -111,64 +116,66 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     // alternatively, function with a bunch of if statements that runs everytime (more resource-heavy?)
     @Override
     public void keyPressed(KeyEvent e){
-        if (e.getKeyCode() == KeyEvent.VK_Z){
-            if (!held_Z){
-                held_Z = true;
-                rotate(LEFT);
+        if (!end){
+            if (e.getKeyCode() == KeyEvent.VK_Z){
+                if (!held_Z){
+                    held_Z = true;
+                    rotate(LEFT);
+                }
             }
-        }
 
-        if (e.getKeyCode() == KeyEvent.VK_UP){
-            if (!held_UP){
-                held_UP = true;
-                rotate(RIGHT);
+            if (e.getKeyCode() == KeyEvent.VK_UP){
+                if (!held_UP){
+                    held_UP = true;
+                    rotate(RIGHT);
+                }
             }
-        }
-        
-        if (e.getKeyCode() == KeyEvent.VK_A){
-            if (!held_A){
-                held_A = true;
-                rotate(TURN);
+            
+            if (e.getKeyCode() == KeyEvent.VK_A){
+                if (!held_A){
+                    held_A = true;
+                    rotate(TURN);
+                }
             }
-        }
 
-        if (e.getKeyCode() == KeyEvent.VK_LEFT){
-            if (!held_LEFT){
-                stopwatchLeft.start();
-                move(LEFT);
-                held_LEFT = true;
+            if (e.getKeyCode() == KeyEvent.VK_LEFT){
+                if (!held_LEFT){
+                    stopwatchLeft.start();
+                    move(LEFT);
+                    held_LEFT = true;
+                }
             }
-        }
 
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT){
-            if (!held_RIGHT){
-                stopwatchRight.start();
-                move(RIGHT);
-                held_RIGHT = true;
+            if (e.getKeyCode() == KeyEvent.VK_RIGHT){
+                if (!held_RIGHT){
+                    stopwatchRight.start();
+                    move(RIGHT);
+                    held_RIGHT = true;
+                }
             }
-        }
 
-        if (e.getKeyCode() == KeyEvent.VK_DOWN){
-            if (!held_DOWN){
-                stopwatchDown.start();
-                stopwatchFall.restart();
-                move(DOWN);
-                held_DOWN = true;
+            if (e.getKeyCode() == KeyEvent.VK_DOWN){
+                if (!held_DOWN){
+                    stopwatchDown.start();
+                    stopwatchFall.restart();
+                    move(DOWN);
+                    held_DOWN = true;
+                }
             }
-        }
 
-        if (e.getKeyCode() == KeyEvent.VK_C){
-            if ((!held_C) && (!hold_pressed)){
-                holdPiece();
-                held_C = true;
-                hold_pressed = true;
+            if (e.getKeyCode() == KeyEvent.VK_C){
+                if ((!held_C) && (!hold_pressed)){
+                    holdPiece();
+                    held_C = true;
+                    hold_pressed = true;
+                }
             }
-        }
 
-        if (e.getKeyCode() == KeyEvent.VK_SPACE){
-            if (!held_SPACE){
-                hardDrop();
-                held_SPACE = true;
+            if (e.getKeyCode() == KeyEvent.VK_SPACE){
+                if (!held_SPACE){
+                    hardDrop();
+                    held_SPACE = true;
+                }
             }
         }
     }
@@ -217,10 +224,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     @Override
     public void run(){
         // TODO current code only supports one playthrough
-        boolean end = false;
         nextBlock();
 
-        while (true){
+        while (!end){
             processKeys();
             repaint();
 
@@ -236,19 +242,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                     first_DOWN = true;
 
                     placeBlock();
-                    matchPatterns();
                     nextBlock();
-
-                    for (int x = 0; x < BOARD_WIDTH; x++){
-                        if (board[x][END_HEIGHT] != 0){
-                            repaint();
-                            end = true;
-                        }
-                    }
-
-                    if (end){
-                        break;
-                    }
                 }
             }
             else {
@@ -533,9 +527,15 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         for (int i = 0; i < 4; i++){
             squareX = x + currentPiece.block(i)[0];
             squareY = y + currentPiece.block(i)[1];
+
+            if (squareY >= END_HEIGHT){
+                end = true;
+            }
+
             board[squareX][squareY] = currentPiece.typeInt();
         }
 
+        matchPatterns();
         repaint();
     }
 
@@ -590,20 +590,154 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
     public void matchPatterns(){
         // TODO add t-spin, tetrises, etc
-        int counter;
+        int squareCounter;
+        int lineCounter = 0;
         int x;
         int y;
+        int tSpinCounter = 0;
+        int tSpinMiniCounter = 0;
+
+        if (currentPiece.typeString().equals("t")){
+            x = currentPieceLocation[0];
+            y = currentPieceLocation[1];
+
+            if (currentPiece.facing() == 0){
+                if ((x + 1 >= BOARD_WIDTH) || (y + 1 >= BOARD_HEIGHT)){
+                    tSpinCounter++;
+                }
+                else if (board[x + 1][y + 1] != 0){
+                    tSpinCounter++;
+                }
+
+                if ((x - 1 < 0) || (y + 1 >= BOARD_HEIGHT)){
+                    tSpinCounter++;
+                }
+                else if (board[x - 1][y + 1] != 0){
+                    tSpinCounter++;
+                }
+
+                if ((x + 1 >= BOARD_WIDTH) || (y - 1 < 0)){
+                    tSpinMiniCounter++;
+                }
+                else if (board[x + 1][y - 1] != 0){
+                    tSpinMiniCounter++;
+                }
+
+                if ((x - 1 < 0) || (y - 1 < 0)){
+                    tSpinMiniCounter++;
+                }
+                else if (board[x - 1][y - 1] != 0){
+                    tSpinMiniCounter++;
+                }
+            }
+            else if (currentPiece.facing() == 1){
+                if ((x + 1 >= BOARD_WIDTH) || (y + 1 >= BOARD_HEIGHT)){
+                    tSpinCounter++;
+                }
+                else if (board[x + 1][y + 1] != 0){
+                    tSpinCounter++;
+                }
+
+                if ((x - 1 < 0) || (y + 1 >= BOARD_HEIGHT)){
+                    tSpinMiniCounter++;
+                }
+                else if (board[x - 1][y + 1] != 0){
+                    tSpinMiniCounter++;
+                }
+
+                if ((x + 1 >= BOARD_WIDTH) || (y - 1 < 0)){
+                    tSpinCounter++;
+                }
+                else if (board[x + 1][y - 1] != 0){
+                    tSpinCounter++;
+                }
+
+                if ((x - 1 < 0) || (y - 1 < 0)){
+                    tSpinMiniCounter++;
+                }
+                else if (board[x - 1][y - 1] != 0){
+                    tSpinMiniCounter++;
+                }
+            }
+            else if (currentPiece.facing() == 2){
+                if ((x + 1 >= BOARD_WIDTH) || (y + 1 >= BOARD_HEIGHT)){
+                    tSpinMiniCounter++;
+                }
+                else if (board[x + 1][y + 1] != 0){
+                    tSpinMiniCounter++;
+                }
+
+                if ((x - 1 < 0) || (y + 1 >= BOARD_HEIGHT)){
+                    tSpinMiniCounter++;
+                }
+                else if (board[x - 1][y + 1] != 0){
+                    tSpinMiniCounter++;
+                }
+
+                if ((x + 1 >= BOARD_WIDTH) || (y - 1 < 0)){
+                    tSpinCounter++;
+                }
+                else if (board[x + 1][y - 1] != 0){
+                    tSpinCounter++;
+                }
+
+                if ((x - 1 < 0) || (y - 1 < 0)){
+                    tSpinCounter++;
+                }
+                else if (board[x - 1][y - 1] != 0){
+                    tSpinCounter++;
+                }
+            }
+            else if (currentPiece.facing() == 3){
+                if ((x + 1 >= BOARD_WIDTH) || (y + 1 >= BOARD_HEIGHT)){
+                    tSpinMiniCounter++;
+                }
+                else if (board[x + 1][y + 1] != 0){
+                    tSpinMiniCounter++;
+                }
+
+                if ((x - 1 < 0) || (y + 1 >= BOARD_HEIGHT)){
+                    tSpinCounter++;
+                }
+                else if (board[x - 1][y + 1] != 0){
+                    tSpinCounter++;
+                }
+
+                if ((x + 1 >= BOARD_WIDTH) || (y - 1 < 0)){
+                    tSpinMiniCounter++;
+                }
+                else if (board[x + 1][y - 1] != 0){
+                    tSpinMiniCounter++;
+                }
+
+                if ((x - 1 < 0) || (y - 1 < 0)){
+                    tSpinCounter++;
+                }
+                else if (board[x - 1][y - 1] != 0){
+                    tSpinCounter++;
+                }
+            }
+        }
+
+        if (tSpinCounter == 2 && tSpinMiniCounter >= 1){
+            System.out.println("tspin");
+        }
+        else if (tSpinCounter >= 1 && tSpinMiniCounter == 2){
+            System.out.println("tspin mini");
+        }
 
         for (y = 0; y < END_HEIGHT; y++){
-            counter = 0;
+            squareCounter = 0;
 
             for (x = 0; x < BOARD_WIDTH; x++){
                 if (board[x][y] == 0){
-                    counter++;
+                    squareCounter++;
                 }
             }
 
-            if (counter == 0){
+            if (squareCounter == 0){
+                lineCounter++;
+
                 for (int i = 0; i < BOARD_WIDTH; i++){
                     for (int j = y; j < END_HEIGHT; j++){
                         board[i][j] = board[i][j + 1];
@@ -612,6 +746,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
                 y--;
             }
+
+            levelLines += lineCounter;
         }
     }
 
@@ -658,10 +794,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         stopwatchLock.reset();
         hold_pressed = false;
         first_DOWN = true;
+
         placeBlock();
-
-        matchPatterns();
-
         nextBlock();
     }
 

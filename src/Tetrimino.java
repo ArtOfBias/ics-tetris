@@ -7,9 +7,11 @@ class Tetrimino {
     private int[][] blocks = new int[4][2];
     private int anchorLeft;
     private int anchorRight;
+    // S and Z anchors
     private int anchorTurn;
     private int temp;
     private int type;
+    private int facing;
 
     public Tetrimino(int type){
         changeType(type);
@@ -20,6 +22,8 @@ class Tetrimino {
     }
 
     public void changeType(int type){
+        facing = 0;
+
         if (type == 1){
             blocks[0] = new int[] {-1,0};
             blocks[1] = new int[] {0,0};
@@ -96,6 +100,8 @@ class Tetrimino {
     }
 
     public void changeType(String type){
+        facing = 0;
+
         if (type.equals("o")){
             blocks[0] = new int[] {-1,0};
             blocks[1] = new int[] {0,0};
@@ -178,6 +184,8 @@ class Tetrimino {
                 blocks[i][0] = -blocks[i][1];
                 blocks[i][1] = temp;
             }
+
+            facing = (facing - 1) % 4;
         }
         else if (direction.equals("right")){
             for (int i = 0; i < 4; i++){
@@ -185,12 +193,16 @@ class Tetrimino {
                 blocks[i][1] = -blocks[i][0];
                 blocks[i][0] = temp;
             }
+
+            facing = (facing + 1) % 4;
         }
         else if (direction.equals("turn")){
             for (int i = 0; i < 4; i++){
                 blocks[i][0] = -blocks[i][0];
                 blocks[i][1] = -blocks[i][1];
             }
+
+            facing = (facing + 2) % 4;
         }
     }
 
@@ -221,30 +233,7 @@ class Tetrimino {
         }
     }
 
-    // TODO this is a debug function, delete later
-    public void print(){
-        boolean o = false;
-        for (int y = 2; y > -3; y--){
-            for (int x = -2; x < 3; x++){
-                o = false;
-
-                for (int i = 0; i < 4; i++){
-                    if (blocks[i][0] == x && blocks[i][1] == y){
-                        if (i == anchorTurn){
-                            System.out.print("a");
-                        }
-                        else {
-                            System.out.print("x");
-                        }
-                        o = true;
-                    }
-                }
-
-                if (!o){
-                    System.out.print(" ");
-                }
-            }
-            System.out.print("\n");
-        }
+    public int facing(){
+        return facing;
     }
 }
