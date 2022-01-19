@@ -9,7 +9,7 @@
 
 class Main {
     public static void main(String[] args){
-        Draw frame = new Draw();
+        Board frame = new Board();
         frame.setVisible(true);
     }
 }
