@@ -3,7 +3,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class GamePanel extends JPanel implements Runnable, KeyListener{
-    public static final int GAME_WIDTH = 500;
+    public static final int GAME_WIDTH = 600;
     public static final int GAME_HEIGHT = 500;
 
     public static final String LEFT = "left";
@@ -40,7 +40,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         {5,1}
     };
 
-    public double das = 80; // delayed auto shift
+    public double das = 140; // delayed auto shift
     public double arr = 10; // auto repeat rate
 
     public double fallDelay = 1000; // time it takes for piece to fall automatically
@@ -137,17 +137,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                 move(LEFT);
                 held_LEFT = true;
             }
-            else {
-                if (first_LEFT && (stopwatchLeft.elapsed() >= das)){
-                    stopwatchLeft.restart();
-                    move(LEFT);
-                    first_LEFT = false;
-                }
-                else if ((!first_LEFT) && (stopwatchLeft.elapsed() >= arr)){
-                    stopwatchLeft.reset();
-                    move(LEFT);
-                }
-            }
         }
 
         if (e.getKeyCode() == KeyEvent.VK_RIGHT){
@@ -155,17 +144,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                 stopwatchRight.start();
                 move(RIGHT);
                 held_RIGHT = true;
-            }
-            else {
-                if (first_RIGHT && (stopwatchRight.elapsed() >= das)){
-                    stopwatchRight.restart();
-                    move(RIGHT);
-                    first_RIGHT = false;
-                }
-                else if ((!first_RIGHT) && (stopwatchRight.elapsed() >= arr)){
-                    stopwatchRight.reset();
-                    move(RIGHT);
-                }
             }
         }
 
@@ -175,19 +153,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                 stopwatchFall.restart();
                 move(DOWN);
                 held_DOWN = true;
-            }
-            else {
-                if (first_DOWN && (stopwatchDown.elapsed() >= das)){
-                    stopwatchDown.restart();
-                    stopwatchFall.restart();
-                    move(DOWN);
-                    first_DOWN = false;
-                }
-                else if ((!first_DOWN) && (stopwatchRight.elapsed() >= arr)){
-                    stopwatchDown.reset();
-                    stopwatchFall.restart();
-                    move(DOWN);
-                }
             }
         }
 
@@ -255,6 +220,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         nextBlock();
 
         while (true){
+            processKeys();
             repaint();
 
             if (currentPieceLocation[1] == ghostPieceLocation[1]){
@@ -263,7 +229,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                 }
 
                 // actions once block is locked
-                if (stopwatchLock.elapsed() >= 1000){
+                if (stopwatchLock.elapsed() >= 2000){
                     stopwatchLock.reset();
                     hold_pressed = false;
                     first_DOWN = true;
@@ -318,7 +284,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             }
         }
 
-        g.setColor(PIECE_COLOUR[currentPiece.typeInt()].darker().darker().darker());
+        g.setColor(PIECE_COLOUR[currentPiece.typeInt()].darker().darker());
 
         for (int i = 0; i < 4; i++){
             if (ghostPieceLocation[1] + currentPiece.block(i)[1] >= END_HEIGHT){
@@ -475,6 +441,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             }
         }
         else if (direction.equals("turn")){
+            // TODO possible bug here
             rotationAnchorOriginal[0] = currentPiece.block(currentPiece.anchorIndex(TURN))[0] + currentPieceLocation[0];
             rotationAnchorOriginal[1] = currentPiece.block(currentPiece.anchorIndex(TURN))[1] + currentPieceLocation[1];
             anchorOriginal[0] = currentPiece.block(currentPiece.anchorIndex(TURN))[0] + currentPieceLocation[0];
@@ -486,8 +453,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                     counter = 0;
 
                     for (int i = 0; i < 4; i++){
-                        testSquareX = anchorX - currentPiece.block(currentPiece.anchorIndex(LEFT))[0] + currentPiece.block(i)[0];
-                        testSquareY = anchorY - currentPiece.block(currentPiece.anchorIndex(LEFT))[1] + currentPiece.block(i)[1];
+                        testSquareX = anchorX - currentPiece.block(currentPiece.anchorIndex(TURN))[0] + currentPiece.block(i)[0];
+                        testSquareY = anchorY - currentPiece.block(currentPiece.anchorIndex(TURN))[1] + currentPiece.block(i)[1];
 
                         if ((testSquareX < 0) || (testSquareX >= BOARD_WIDTH)){
                             break;
@@ -545,8 +512,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             ghostPiece();
             repaint();
         }
+        else if (direction.equals("turn")){
+            currentPiece.rotate(direction);
+        }
         else {
             for (int i = 0; i < 3; i++){
+                // turn bug here?
                 currentPiece.rotate(direction);
             }
         }
@@ -777,6 +748,46 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         }
 
         ghostPiece();
+    }
+
+    public void processKeys(){
+        if (held_LEFT){
+            if (first_LEFT && (stopwatchLeft.elapsed() >= das)){
+                stopwatchLeft.restart();
+                move(LEFT);
+                first_LEFT = false;
+            }
+            else if ((!first_LEFT) && (stopwatchLeft.elapsed() >= arr)){
+                stopwatchLeft.restart();
+                move(LEFT);
+            }
+        }
+
+        if (held_RIGHT){
+            if (first_RIGHT && (stopwatchRight.elapsed() >= das)){
+                stopwatchRight.restart();
+                move(RIGHT);
+                first_RIGHT = false;
+            }
+            else if ((!first_RIGHT) && (stopwatchRight.elapsed() >= arr)){
+                stopwatchRight.restart();
+                move(RIGHT);
+            }
+        }
+
+        if (held_DOWN){
+            if (first_DOWN && (stopwatchDown.elapsed() >= das)){
+                stopwatchDown.restart();
+                stopwatchFall.restart();
+                move(DOWN);
+                first_DOWN = false;
+            }
+            else if ((!first_DOWN) && (stopwatchDown.elapsed() >= arr)){
+                stopwatchDown.restart();
+                stopwatchFall.restart();
+                move(DOWN);
+            }
+        }
     }
 
     public double distance(int[] point1, int[] point2){
