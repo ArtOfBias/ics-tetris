@@ -2,7 +2,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-
 public class GamePanel extends JPanel implements Runnable, KeyListener{
     public static final int GAME_WIDTH = 500;
     public static final int GAME_HEIGHT = 500;
@@ -41,7 +40,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         {5,1}
     };
 
-    public double das = 120; // delayed auto shift
+    public double das = 80; // delayed auto shift
     public double arr = 10; // auto repeat rate
 
     public double fallDelay = 1000; // time it takes for piece to fall automatically
@@ -63,6 +62,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public boolean held_UP = false;
     public boolean held_A = false;
     public boolean held_C = false;
+    public boolean held_SPACE = false;
 
     public boolean hold_pressed = false;
 
@@ -79,8 +79,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
     public boolean held_DOWN = false;
     public boolean first_DOWN = true;
-
-    public boolean held_SPACE = false;
 
     public Stopwatch stopwatchDown = new Stopwatch();
 
@@ -198,6 +196,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                 hold_pressed = true;
             }
         }
+
+        if (e.getKeyCode() == KeyEvent.VK_SPACE){
+            if (!held_SPACE){
+                hardDrop();
+                held_SPACE = true;
+            }
+        }
     }
 
     @Override
@@ -234,6 +239,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
         if (e.getKeyCode() == KeyEvent.VK_C){
             held_C = false;
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_SPACE){
+            held_SPACE = false;
         }
     }
 
@@ -319,6 +328,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         g.setColor(PIECE_COLOUR[currentPiece.typeInt()]);
 
         for (int i = 0; i < 4; i++){
+            if (currentPieceLocation[1] + currentPiece.block(i)[1] >= END_HEIGHT){
+                continue;
+            }
             realX = (GAME_WIDTH - BOARD_WIDTH * SCALE) / 2 + (currentPieceLocation[0] + currentPiece.block(i)[0]) * SCALE;
             realY = (GAME_HEIGHT - (currentPieceLocation[1] + currentPiece.block(i)[1] + 1) * SCALE);
             g.fillRect(realX, realY, SCALE, SCALE);
@@ -348,8 +360,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             anchorOriginal[1] = currentPiece.block(currentPiece.anchorIndex(TURN))[1] + currentPieceLocation[1];
             currentPiece.rotate(LEFT);
 
-            for (int anchorX = rotationAnchorOriginal[0] - 1; anchorX <= rotationAnchorOriginal[0] + 1; anchorX++){
-                for (int anchorY = rotationAnchorOriginal[1] - 1; anchorY <= rotationAnchorOriginal[1] + 1; anchorY++){
+            for (int anchorX = rotationAnchorOriginal[0] - 2; anchorX <= rotationAnchorOriginal[0] + 2; anchorX++){
+                for (int anchorY = rotationAnchorOriginal[1] - 2; anchorY <= rotationAnchorOriginal[1] + 2; anchorY++){
                     counter = 0;
 
                     for (int i = 0; i < 4; i++){
@@ -377,19 +389,19 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                             bestDistance = distance(best, anchorOriginal);
                         }
                         else {
-                            if (distance(new int[] {anchorX,anchorY}, anchorOriginal) > bestDistance){
+                            if (distance(new int[] {anchorX,anchorY}, anchorOriginal) < bestDistance){
                                 best[0] = anchorX;
                                 best[1] = anchorY;
                                 bestDistance = distance(best, anchorOriginal);
                             }
-                            else {
+                            else if (distance(new int[] {anchorX,anchorY}, anchorOriginal) == bestDistance){
                                 if (anchorY < best[1]){
                                     best[0] = anchorX;
                                     best[1] = anchorY;
                                     bestDistance = distance(best, anchorOriginal);
                                 }
-                                else {
-                                    if (anchorX > best[1]){
+                                else if (anchorY == best[1]){
+                                    if (anchorX > best[0]){
                                         best[0] = anchorX;
                                         best[1] = anchorY;
                                         bestDistance = distance(best, anchorOriginal);
@@ -408,8 +420,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             anchorOriginal[1] = currentPiece.block(currentPiece.anchorIndex(TURN))[1] + currentPieceLocation[1];
             currentPiece.rotate(RIGHT);
 
-            for (int anchorX = rotationAnchorOriginal[0] - 1; anchorX <= rotationAnchorOriginal[0] + 1; anchorX++){
-                for (int anchorY = rotationAnchorOriginal[1] - 1; anchorY <= rotationAnchorOriginal[1] + 1; anchorY++){
+            for (int anchorX = rotationAnchorOriginal[0] - 2; anchorX <= rotationAnchorOriginal[0] + 2; anchorX++){
+                for (int anchorY = rotationAnchorOriginal[1] - 2; anchorY <= rotationAnchorOriginal[1] + 2; anchorY++){
                     counter = 0;
                     
                     for (int i = 0; i < 4; i++){
@@ -437,19 +449,19 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                             bestDistance = distance(best, anchorOriginal);
                         }
                         else {
-                            if (distance(new int[] {anchorX,anchorY}, anchorOriginal) > bestDistance){
+                            if (distance(new int[] {anchorX,anchorY}, anchorOriginal) < bestDistance){
                                 best[0] = anchorX;
                                 best[1] = anchorY;
                                 bestDistance = distance(best, anchorOriginal);
                             }
-                            else {
+                            else if (distance(new int[] {anchorX,anchorY}, anchorOriginal) == bestDistance){
                                 if (anchorY < best[1]){
                                     best[0] = anchorX;
                                     best[1] = anchorY;
                                     bestDistance = distance(best, anchorOriginal);
                                 }
-                                else {
-                                    if (anchorX < best[1]){
+                                else if (anchorY == best[1]){
+                                    if (anchorX < best[0]){
                                         best[0] = anchorX;
                                         best[1] = anchorY;
                                         bestDistance = distance(best, anchorOriginal);
@@ -468,8 +480,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             anchorOriginal[1] = currentPiece.block(currentPiece.anchorIndex(TURN))[1] + currentPieceLocation[1];
             currentPiece.rotate(TURN);
 
-            for (int anchorX = rotationAnchorOriginal[0] - 1; anchorX <= rotationAnchorOriginal[0] + 1; anchorX++){
-                for (int anchorY = rotationAnchorOriginal[1] - 1; anchorY <= rotationAnchorOriginal[1] + 1; anchorY++){
+            for (int anchorX = rotationAnchorOriginal[0] - 2; anchorX <= rotationAnchorOriginal[0] + 2; anchorX++){
+                for (int anchorY = rotationAnchorOriginal[1] - 2; anchorY <= rotationAnchorOriginal[1] + 2; anchorY++){
                     counter = 0;
 
                     for (int i = 0; i < 4; i++){
@@ -497,19 +509,19 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                             bestDistance = distance(best, anchorOriginal);
                         }
                         else {
-                            if (distance(new int[] {anchorX,anchorY}, anchorOriginal) > bestDistance){
+                            if (distance(new int[] {anchorX,anchorY}, anchorOriginal) < bestDistance){
                                 best[0] = anchorX;
                                 best[1] = anchorY;
                                 bestDistance = distance(best, anchorOriginal);
                             }
-                            else {
+                            else if (distance(new int[] {anchorX,anchorY}, anchorOriginal) == bestDistance){
                                 if (anchorY < best[1]){
                                     best[0] = anchorX;
                                     best[1] = anchorY;
                                     bestDistance = distance(best, anchorOriginal);
                                 }
-                                else {
-                                    if (anchorX > best[1]){
+                                else if (anchorY == best[1]){
+                                    if (anchorX > best[0]){
                                         best[0] = anchorX;
                                         best[1] = anchorY;
                                         bestDistance = distance(best, anchorOriginal);
@@ -579,6 +591,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             bagPosition = 0;
         }
 
+        move(DOWN);
+
         ghostPiece();
         repaint();
     }
@@ -596,6 +610,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             currentPieceLocation = new int[] {START_POSITIONS[currentPiece.typeInt() - 1][0], END_HEIGHT + START_POSITIONS[currentPiece.typeInt() - 1][1] - 1};
             currentPiece = new Tetrimino(temp);
         }
+
+        ghostPiece();
+        repaint();
     }
 
     public void matchPatterns(){
@@ -606,6 +623,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
         for (y = 0; y < END_HEIGHT; y++){
             counter = 0;
+
             for (x = 0; x < BOARD_WIDTH; x++){
                 if (board[x][y] == 0){
                     counter++;
@@ -618,6 +636,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                         board[i][j] = board[i][j + 1];
                     }
                 }
+
+                y--;
             }
         }
     }
@@ -662,7 +682,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         // TODO will probably cause issues if executed at the same time as lockdown timer starts
         stopwatchLock.reset();
         currentPieceLocation[1] = ghostPieceLocation[1];
+        stopwatchLock.reset();
+        hold_pressed = false;
+        first_DOWN = true;
         placeBlock();
+
+        matchPatterns();
+
+        nextBlock();
     }
 
     public void move(String direction){
