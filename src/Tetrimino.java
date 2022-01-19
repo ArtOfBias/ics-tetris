@@ -1,3 +1,6 @@
+package src;
+
+
 class Tetrimino {
     private static final String[] TYPE = new String[] {"o","i","t","l","j","s","z"};
 
