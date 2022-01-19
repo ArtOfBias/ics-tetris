@@ -1,3 +1,5 @@
+import src.GameFrame;
+
 // import java.util.Scanner;
 // import java.awt.*;
 // import javax.swing.*;
