@@ -282,8 +282,16 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
         boolean newFile = true;
         int[] highscores = new int[] {0,0,0,0,0};
+        File dataFolder = new File("data");
         File scoreFile = new File("data\\highscores.txt");
         BufferedReader scoreReader = null;
+
+        try {
+            dataFolder.mkdirs();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
 
         try {
             newFile = scoreFile.createNewFile();
@@ -1031,11 +1039,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         }
 
         fallDelay = (Math.pow((0.8 - (level -  1) * 0.007), level - 1)) * 1000;
-
-        // TODO no end?
-        if (level > 15){
-            end = true;
-        }
     }
 
     public void hardDrop(){
