@@ -12,7 +12,7 @@ public class GameFrame extends JFrame{
         this.add(panel);
         this.setTitle("Tetris");
         this.setResizable(false);
-        this.setBackground(Color.GRAY);
+        this.setBackground(Color.BLACK);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack();
         this.setVisible(true);
