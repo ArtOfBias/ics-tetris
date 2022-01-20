@@ -41,12 +41,16 @@ public class Menu extends JFrame implements ActionListener{
         exit.setLocation(235, 300);
         c.add(play);
         c.add(exit);
+
+        Font font = new Font("Consolas", Font.BOLD, 15);
+        ((JButton)play).setFont(font);
+        ((JButton)exit).setFont(font);
     }
 
     public void paint(Graphics g){
         super.paint(g);
         getContentPane().setBackground(Color.black);
-        g.setFont(new Font("TimesRoman", Font.PLAIN, 50)); 
+        g.setFont(new Font("Consolas", Font.PLAIN, 36)); 
         g.setColor(Color.white);
         g.drawString("Tetris", 235, 150);
     }
