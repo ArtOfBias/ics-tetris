@@ -59,7 +59,8 @@ public class GameFrame extends JFrame implements ActionListener{
             this.dispose();
         }
         if (e.getSource() == menuButton){
-
+            new Menu();
+            this.dispose();
         }
     }
 
