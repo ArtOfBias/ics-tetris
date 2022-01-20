@@ -6,6 +6,8 @@ import javax.swing.*;
 
 // TODO settings
 public class Menu extends JFrame implements ActionListener{
+    private ImageIcon image;
+    private JLabel imageLabel;
     GameFrame frame;
     JButton play;
     JButton exit;
@@ -45,14 +47,19 @@ public class Menu extends JFrame implements ActionListener{
         Font font = new Font("Consolas", Font.BOLD, 15);
         ((JButton)play).setFont(font);
         ((JButton)exit).setFont(font);
+
+        //add image
+        image = new ImageIcon(getClass().getResource("Logo.png"));
+        imageLabel = new JLabel(image);
+        add(imageLabel);
     }
 
     public void paint(Graphics g){
         super.paint(g);
         getContentPane().setBackground(Color.black);
-        g.setFont(new Font("Consolas", Font.PLAIN, 36)); 
+        /*g.setFont(new Font("Consolas", Font.PLAIN, 36)); 
         g.setColor(Color.white);
-        g.drawString("Tetris", 235, 150);
+        g.drawString("Tetris", 235, 150);*/
     }
 
     public void actionPerformed(ActionEvent e){
