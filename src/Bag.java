@@ -25,11 +25,6 @@ public class Bag {
         }
     }
 
-    // TODO not sure if this is useful
-    public void reset(){
-        bagPieces = new int[] {1,2,3,4,5,6,7};
-    }
-
     private static int randInt(int a, int b){
         return (int)Math.floor(randNumber(a, b + 1));
     }
