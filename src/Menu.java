@@ -57,6 +57,7 @@ public class Menu extends JFrame implements ActionListener{
 
         pack();
         repaint();
+        // TODO does not work if menu button is pressed in GameFrame
     }
 
     public void paint(Graphics g){

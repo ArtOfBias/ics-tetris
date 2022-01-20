@@ -4,6 +4,13 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.File;
+import java.io.IOException;
+
 public class GamePanel extends JPanel implements Runnable, KeyListener{
     public static final int GAME_WIDTH = 600;
     public static final int GAME_HEIGHT = 420;
@@ -272,6 +279,119 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                 }
             }
         }
+
+        boolean newFile = true;
+        int[] highscores = new int[] {0,0,0,0,0};
+        File scoreFile = new File("data\\highscores.txt");
+        BufferedReader scoreReader = null;
+
+        try {
+            newFile = scoreFile.createNewFile();
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+
+        if (newFile){
+            BufferedWriter scoreWriter = null;
+
+            try {
+                scoreWriter = new BufferedWriter(new FileWriter(scoreFile, false));
+            }
+            catch (IOException e){
+                e.printStackTrace();
+            }
+
+            for (int i = 0; i < 5; i++){
+                try {
+                    scoreWriter.write(String.valueOf(highscores[i]));
+                    scoreWriter.newLine();
+                }
+                catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+
+            try {
+                scoreWriter.flush();
+            }
+            catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        else {
+            int i = 0;
+            String currentLine = null;
+
+            try {
+                scoreReader = new BufferedReader(new FileReader(scoreFile));
+            }
+            catch (IOException e){
+                e.printStackTrace();
+            }
+
+            while (true){
+                try {
+                    currentLine = scoreReader.readLine();
+                }
+                catch (IOException e){
+                    e.printStackTrace();
+                }
+
+                if (currentLine == null){
+                    break;
+                }
+
+                highscores[i] = Integer.parseInt(currentLine);
+                i++;
+            }
+
+            try {
+                if (scoreReader != null){
+                    scoreReader.close();
+                }
+            }
+            catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+
+        for (int i = 0; i < 5; i++){
+            if (score > highscores[i]){
+                for (int j = 4; j > i; j--){
+                    highscores[j] = highscores[j - 1];
+                }
+
+                highscores[i] = score;
+                break;
+            }
+        }
+
+        BufferedWriter scoreWriter = null;
+
+        try {
+            scoreWriter = new BufferedWriter(new FileWriter(scoreFile, false));
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+
+        for (int i = 0; i < 5; i++){
+            try {
+                scoreWriter.write(String.valueOf(highscores[i]));
+                scoreWriter.newLine();
+            }
+            catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            scoreWriter.flush();
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -288,14 +408,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         int realY;
 
         g.setColor(Color.LIGHT_GRAY);
-        g.fillRect((GAME_WIDTH - BOARD_WIDTH * SCALE) / 2 - 1, GAME_HEIGHT - END_HEIGHT * SCALE - 1, BOARD_WIDTH * SCALE + 2, (END_HEIGHT + 1) * SCALE + 1);
+        g.fillRect((GAME_WIDTH - BOARD_WIDTH * SCALE) / 2 - 1, GAME_HEIGHT - END_HEIGHT * SCALE - 2, BOARD_WIDTH * SCALE + 2, (END_HEIGHT + 1) * SCALE + 2);
 
         // draws placed blocks on the board
         for (int x = 0; x < BOARD_WIDTH; x++){
             for (int y = 0; y < END_HEIGHT; y++){
                 g.setColor(PIECE_COLOUR[board[x][y]]);
                 realX = (GAME_WIDTH - BOARD_WIDTH * SCALE) / 2 + x * SCALE;
-                realY = (GAME_HEIGHT - (y + 1) * SCALE);
+                realY = (GAME_HEIGHT - (y + 1) * SCALE) - 1;
                 g.fillRect(realX, realY, SCALE, SCALE);
             }
         }
@@ -308,7 +428,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                 continue;
             }
             realX = (GAME_WIDTH - BOARD_WIDTH * SCALE) / 2 + (ghostPieceLocation[0] + currentPiece.block(i)[0]) * SCALE;
-            realY = (GAME_HEIGHT - (ghostPieceLocation[1] + currentPiece.block(i)[1] + 1) * SCALE);
+            realY = (GAME_HEIGHT - (ghostPieceLocation[1] + currentPiece.block(i)[1] + 1) * SCALE) - 1;
             g.fillRect(realX, realY, SCALE, SCALE);
         }
 
@@ -320,7 +440,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                 continue;
             }
             realX = (GAME_WIDTH - BOARD_WIDTH * SCALE) / 2 + (currentPieceLocation[0] + currentPiece.block(i)[0]) * SCALE;
-            realY = (GAME_HEIGHT - (currentPieceLocation[1] + currentPiece.block(i)[1] + 1) * SCALE);
+            realY = (GAME_HEIGHT - (currentPieceLocation[1] + currentPiece.block(i)[1] + 1) * SCALE) - 1;
             g.fillRect(realX, realY, SCALE, SCALE);
         }
 
