@@ -42,7 +42,7 @@ public class Menu extends JFrame implements ActionListener{
         c.add(play);
         c.add(exit);
 
-        Font font = new Font("Consolas", Font.BOLD, 15);
+        Font font = new Font("Consolas", Font.BOLD, 20);
         ((JButton)play).setFont(font);
         ((JButton)exit).setFont(font);
 
