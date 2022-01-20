@@ -18,26 +18,37 @@ public class Menu extends JFrame implements ActionListener{
         this.setSize(600, 500);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
-
+        
+        //create new buttons
         play = new JButton("Play");
         play.addActionListener(this);
         exit = new JButton("Exit");
         exit.addActionListener(this);
+        //set button colors
+        play.setBackground(Color.black);
+        exit.setBackground(Color.black);
+        play.setForeground(Color.white);
+        exit.setForeground(Color.white);
+        play.setFocusPainted(false);
+        exit.setFocusPainted(false);
 
+        //add the buttons
         Container c = getContentPane();
         c.setLayout(null);
         play.setSize(100, 50);
         exit.setSize(100, 50);
-        play.setLocation(200, 200);
-        exit.setLocation(200, 300);
+        play.setLocation(235, 200);
+        exit.setLocation(235, 300);
         c.add(play);
         c.add(exit);
     }
 
     public void paint(Graphics g){
         super.paint(g);
+        getContentPane().setBackground(Color.black);
         g.setFont(new Font("TimesRoman", Font.PLAIN, 50)); 
-        g.drawString("Tetris", 195, 150);
+        g.setColor(Color.white);
+        g.drawString("Tetris", 235, 150);
     }
 
     public void actionPerformed(ActionEvent e){
