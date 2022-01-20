@@ -45,6 +45,8 @@ public class Menu extends JFrame implements ActionListener{
         Font font = new Font("Consolas", Font.BOLD, 15);
         ((JButton)play).setFont(font);
         ((JButton)exit).setFont(font);
+
+        repaint();
     }
 
     public void paint(Graphics g){

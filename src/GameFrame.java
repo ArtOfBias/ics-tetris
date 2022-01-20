@@ -16,7 +16,7 @@ public class GameFrame extends JFrame implements ActionListener{
         Container c = new Container();
         c.setLayout(new GridLayout());
         
-        restartButton = new JButton("RESTART");
+        restartButton = new JButton("Restart");
         restartButton.addActionListener(this);
         restartButton.setFont(new Font("Consolas", Font.PLAIN, 20));
         restartButton.setBackground(Color.BLACK);
@@ -25,7 +25,7 @@ public class GameFrame extends JFrame implements ActionListener{
         restartButton.setLocation((600 - 100) / 2, 0);
         c.add(restartButton);
 
-        menuButton = new JButton("MENU");
+        menuButton = new JButton("Menu");
         menuButton.addActionListener(this);
         menuButton.setFont(new Font("Consolas", Font.PLAIN, 20));
         menuButton.setBackground(Color.BLACK);
