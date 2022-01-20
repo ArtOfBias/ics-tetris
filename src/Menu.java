@@ -6,8 +6,8 @@ import javax.swing.*;
 
 // TODO settings
 public class Menu extends JFrame implements ActionListener{
-    private ImageIcon image;
-    private JLabel imageLabel;
+    //private ImageIcon image;
+    //private JLabel imageLabel;
     GameFrame frame;
     JButton play;
     JButton exit;
@@ -48,11 +48,14 @@ public class Menu extends JFrame implements ActionListener{
         ((JButton)play).setFont(font);
         ((JButton)exit).setFont(font);
 
+
         //add image
-        image = new ImageIcon(getClass().getResource("Logo.png"));
+        /*image = new ImageIcon(getClass().getResource("Logo.png"));
         imageLabel = new JLabel(image);
-        add(imageLabel);
-        
+        add(imageLabel);*/
+
+
+        pack();
         repaint();
     }
 

@@ -11,6 +11,8 @@ package src;
 class Main {
     public static void main(String[] args){
         //GameFrame frame = new GameFrame();
-        new Menu();
+        /*Menu menu = new Menu();
+        menu.setVisible(true);*/
+        new TestImage();
     }
 }
