@@ -32,36 +32,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     };
 
     public static final int[][] START_POSITIONS = new int[][] {
-        {5,1},
+        {6,1},
         {6,1},
         {5,1},
         {5,1},
         {5,1},
         {5,2},
-        {5,1}
+        {5,2}
     };
-
-    public double das = 140; // delayed auto shift
-    public double arr = 10; // auto repeat rate
-
-    public double fallDelay = 1000; // time it takes for piece to fall automatically
-    // TODO this should be dynamic and change with levels
-    // TODO levels
-
-    public int[][] board = new int[BOARD_WIDTH][BOARD_HEIGHT]; // board, where placed pieces are stored
-    public Tetrimino currentPiece; // current piece being controlled by player
-    public int[] currentPieceLocation = new int[2]; // location of current piece
-    public int[] ghostPieceLocation = new int[2]; // location of ghost piece, projection of current piece
-
-    public int hold = 0;
-
-    // variables for handling piece queue
-    public Bag bag1 = new Bag();
-    public Bag bag2 = new Bag();
-    public int bagPosition = 0;
-
-    // counts number of lines cleared this level
-    public int levelLines = 0;
 
     // the following booleans indicate whether the corresponding key is held down
     public boolean held_Z = false;
@@ -95,6 +73,37 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public Graphics graphics;
     public Image image;
 
+    public int[][] board = new int[BOARD_WIDTH][BOARD_HEIGHT]; // board, where placed pieces are stored
+    public Tetrimino currentPiece; // current piece being controlled by player
+    public int[] currentPieceLocation = new int[2]; // location of current piece
+    public int[] ghostPieceLocation = new int[2]; // location of ghost piece, projection of current piece
+
+    public double das = 140; // delayed auto shift
+    public double arr = 10; // auto repeat rate
+
+    public double fallDelay = 1000; // time it takes for piece to fall automatically
+    // TODO this should be dynamic and change with levels
+    // TODO levels
+
+    public int hold = 0;
+
+    // variables for handling piece queue
+    public Bag bag1 = new Bag();
+    public Bag bag2 = new Bag();
+    public int bagPosition = 0;
+
+    // counts number of lines cleared this level
+    public int levelLines = 0;
+
+    public int level = 1;
+
+    // stores the score
+    public int score = 0;
+
+    // stores whether a back-to-back bonus will be applied
+    public boolean btb = false;
+
+    // TODO unfinished
     public boolean end = false;
 
     public GamePanel(){
@@ -169,6 +178,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                     stopwatchDown.start();
                     stopwatchFall.restart();
                     move(DOWN);
+                    score++;
                     held_DOWN = true;
                 }
             }
@@ -246,7 +256,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                 }
 
                 // actions once block is locked
-                if (stopwatchLock.elapsed() >= 2000){
+                if (stopwatchLock.elapsed() >= LOCK_TIME){
                     stopwatchLock.reset();
                     hold_pressed = false;
                     first_DOWN = true;
@@ -277,9 +287,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     }
 
     public void draw(Graphics g){
+        // drawing board outline
         int realX;
         int realY;
 
+        g.setColor(Color.LIGHT_GRAY);
+        g.fillRect((GAME_WIDTH - BOARD_WIDTH * SCALE) / 2 - 1, GAME_HEIGHT - END_HEIGHT * SCALE - 1, BOARD_WIDTH * SCALE + 2, (END_HEIGHT + 1) * SCALE + 1);
+
+        // drawing placed blocks on the board
         for (int x = 0; x < BOARD_WIDTH; x++){
             for (int y = 0; y < END_HEIGHT; y++){
                 g.setColor(PIECE_COLOUR[board[x][y]]);
@@ -289,6 +304,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             }
         }
 
+        // drawing ghost peice
         g.setColor(PIECE_COLOUR[currentPiece.typeInt()].darker().darker());
 
         for (int i = 0; i < 4; i++){
@@ -300,6 +316,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             g.fillRect(realX, realY, SCALE, SCALE);
         }
 
+        // drawing current piece, this come after ghost piece in case of overlap
         g.setColor(PIECE_COLOUR[currentPiece.typeInt()]);
 
         for (int i = 0; i < 4; i++){
@@ -311,8 +328,34 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             g.fillRect(realX, realY, SCALE, SCALE);
         }
 
+        // drawing score
+        String scoreString = "";
+
+        for (int i = 0; i < 7 - String.valueOf(score).length(); i++){
+            scoreString += "0";
+        }
+
+        scoreString += String.valueOf(score);
+
+        g.setColor(Color.LIGHT_GRAY);
+        g.setFont(new Font("Consolas", Font.PLAIN, 20));
+        g.drawString("SCORE", (GAME_WIDTH - BOARD_WIDTH * SCALE) / 4, GAME_HEIGHT - 40);
+        g.drawString(scoreString, (GAME_WIDTH - BOARD_WIDTH * SCALE) / 4, GAME_HEIGHT - 20);
+
+        // drawing held piece
+        if (hold != 0){
+            Tetrimino holdTetrimino = new Tetrimino(hold);
+
+            g.setColor(PIECE_COLOUR[hold]);
+            
+            for (int i = 0; i < 4; i++){
+                realX = (GAME_WIDTH - BOARD_WIDTH * SCALE) / 2 - 55 + holdTetrimino.block(i)[0] * SCALE;
+                realY = (BOARD_HEIGHT + 100 - holdTetrimino.block(i)[1] * SCALE);
+                g.fillRect(realX, realY, SCALE, SCALE);
+            }
+        }
+
         // TODO draw queue
-        // TODO draw hold
     }
 
     public void rotate(String direction){
@@ -514,6 +557,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         if (found){
             currentPieceLocation[0] = best[0] - currentPiece.block(currentPiece.anchorIndex(direction))[0];
             currentPieceLocation[1] = best[1] - currentPiece.block(currentPiece.anchorIndex(direction))[1];
+            stopwatchLock.reset();
             ghostPiece();
             repaint();
         }
@@ -563,7 +607,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             throw new IndexOutOfBoundsException();
         }
 
-        currentPieceLocation = new int[] {START_POSITIONS[currentPiece.typeInt() - 1][0], END_HEIGHT + START_POSITIONS[currentPiece.typeInt() - 1][1] - 1};
+        currentPieceLocation = new int[] {START_POSITIONS[currentPiece.typeInt() - 1][0] - 1, END_HEIGHT + START_POSITIONS[currentPiece.typeInt() - 1][1] - 1};
 
         bagPosition++;
         if (bagPosition == 7){
@@ -575,6 +619,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         }
 
         move(DOWN);
+        stopwatchFall.restart();
 
         ghostPiece();
         repaint();
@@ -606,6 +651,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         int y;
         int tSpinCounter = 0;
         int tSpinMiniCounter = 0;
+        boolean tSpin;
+        boolean temp = btb;
+        int dropScore = 0;
 
         if (currentPiece.typeString().equals("t")){
             x = currentPieceLocation[0];
@@ -729,36 +777,61 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             }
         }
 
-        if (tSpinCounter == 2 && tSpinMiniCounter >= 1){
-            System.out.println("tspin");
-        }
-        else if (tSpinCounter >= 1 && tSpinMiniCounter == 2){
-            System.out.println("tspin mini");
-        }
-
         for (y = 0; y < END_HEIGHT; y++){
             squareCounter = 0;
-
+            
             for (x = 0; x < BOARD_WIDTH; x++){
                 if (board[x][y] == 0){
                     squareCounter++;
                 }
             }
-
+            
             if (squareCounter == 0){
                 lineCounter++;
-
+                
                 for (int i = 0; i < BOARD_WIDTH; i++){
                     for (int j = y; j < END_HEIGHT; j++){
                         board[i][j] = board[i][j + 1];
                     }
                 }
-
+                
                 y--;
             }
-
-            levelLines += lineCounter;
         }
+
+        tSpin = (tSpinCounter == 2) && (tSpinMiniCounter >= 1);
+
+        if (tSpin){
+            dropScore = (lineCounter + 1) * 400;
+            btb = true;
+        }
+        else {
+            if (lineCounter == 1){
+                dropScore = 100;
+                btb = false;
+            }
+            else if (lineCounter == 2){
+                dropScore = 300;
+                btb = false;
+            }
+            else if (lineCounter == 3){
+                dropScore = 500;
+                btb = false;
+            }
+            else if (lineCounter == 4){
+                dropScore = 800;
+                btb = true;
+            }
+        }
+
+        dropScore *= level;
+
+        if (temp && btb){
+            dropScore = (int)(dropScore * 3 / 2);
+        }
+
+        score += dropScore;
+        levelLines += lineCounter;
     }
 
     public void ghostPiece(){
@@ -800,6 +873,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public void hardDrop(){
         // TODO will probably cause issues if executed at the same time as lockdown timer starts
         stopwatchLock.reset();
+        score += (currentPieceLocation[1] - ghostPieceLocation[1]) * 2;
+
         currentPieceLocation[1] = ghostPieceLocation[1];
         stopwatchLock.reset();
         hold_pressed = false;
@@ -837,6 +912,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             }
 
             if (counter == 4){
+                stopwatchLock.reset();
                 currentPieceLocation = new int[] {x,y};
             }
         }
@@ -861,6 +937,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             }
 
             if (counter == 4){
+                stopwatchLock.reset();
                 currentPieceLocation = new int[] {x,y};
             }
         }
@@ -885,6 +962,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             }
 
             if (counter == 4){
+                stopwatchLock.reset();
                 currentPieceLocation = new int[] {x,y};
             }
         }
@@ -925,12 +1003,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                 stopwatchDown.restart();
                 stopwatchFall.restart();
                 move(DOWN);
+                score++;
                 first_DOWN = false;
             }
             else if ((!first_DOWN) && (stopwatchDown.elapsed() >= arr)){
                 stopwatchDown.restart();
                 stopwatchFall.restart();
                 move(DOWN);
+                score++;
             }
         }
     }
