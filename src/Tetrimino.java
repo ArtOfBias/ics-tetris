@@ -60,7 +60,7 @@ class Tetrimino {
             blocks[2] = new int[] {0,0};
             blocks[3] = new int[] {1,0};
             anchorLeft = 2;
-            anchorRight = 2;
+            anchorRight = 1;
             anchorTurn = 2;
             this.type = type;
         }
@@ -69,7 +69,7 @@ class Tetrimino {
             blocks[1] = new int[] {-1,0};
             blocks[2] = new int[] {0,0};
             blocks[3] = new int[] {1,0};
-            anchorLeft = 2;
+            anchorLeft = 3;
             anchorRight = 2;
             anchorTurn = 2;
             this.type = type;
@@ -103,78 +103,31 @@ class Tetrimino {
         facing = 0;
 
         if (type.equals("o")){
-            blocks[0] = new int[] {-1,0};
-            blocks[1] = new int[] {0,0};
-            blocks[2] = new int[] {-1,-1};
-            blocks[3] = new int[] {0,-1};
-            anchorLeft = 0;
-            anchorRight = 1;
-            anchorTurn = 1;
             this.type = 1;
         }
         else if (type.equals("i")){
-            blocks[0] = new int[] {-2,0};
-            blocks[1] = new int[] {-1,0};
-            blocks[2] = new int[] {0,0};
-            blocks[3] = new int[] {1,0};
-            anchorLeft = 1;
-            anchorRight = 2;
-            anchorTurn = 2;
             this.type = 2;
         }
         else if (type.equals("t")){
-            blocks[0] = new int[] {0,1};
-            blocks[1] = new int[] {-1,0};
-            blocks[2] = new int[] {0,0};
-            blocks[3] = new int[] {1,0};
-            anchorLeft = 3;
-            anchorRight = 1;
-            anchorTurn = 2;
             this.type = 3;
         }
         else if (type.equals("l")){
-            blocks[0] = new int[] {1,1};
-            blocks[1] = new int[] {-1,0};
-            blocks[2] = new int[] {0,0};
-            blocks[3] = new int[] {1,0};
-            anchorLeft = 2;
-            anchorRight = 2;
-            anchorTurn = 2;
             this.type = 4;
         }
         else if (type.equals("j")){
-            blocks[0] = new int[] {-1,1};
-            blocks[1] = new int[] {-1,0};
-            blocks[2] = new int[] {0,0};
-            blocks[3] = new int[] {1,0};
-            anchorLeft = 2;
-            anchorRight = 2;
-            anchorTurn = 2;
             this.type = 5;
         }
         else if (type.equals("s")){
-            blocks[0] = new int[] {0,0};
-            blocks[1] = new int[] {1,0};
-            blocks[2] = new int[] {-1,-1};
-            blocks[3] = new int[] {0,-1};
-            anchorLeft = 0;
-            anchorRight = 0;
-            anchorTurn = 0;
             this.type = 6;
         }
         else if (type.equals("z")){
-            blocks[0] = new int[] {0,0};
-            blocks[1] = new int[] {1,0};
-            blocks[2] = new int[] {1,-1};
-            blocks[3] = new int[] {2,-1};
-            anchorLeft = 1;
-            anchorRight = 1;
-            anchorTurn = 1;
             this.type = 7;
         }
         else {
             throw new IllegalArgumentException("invalid piece type, valid pieces are [o,i,t,l,j,s,z]");
         }
+
+        changeType(this.type);
     }
 
     public void rotate(String direction){

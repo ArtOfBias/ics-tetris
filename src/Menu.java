@@ -3,6 +3,8 @@ package src;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
+// TODO settings
 public class Menu extends JFrame implements ActionListener{
     GameFrame frame;
     JButton play;
@@ -13,7 +15,7 @@ public class Menu extends JFrame implements ActionListener{
         this.setResizable(false);
         this.setBackground(Color.GRAY);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(500, 500);
+        this.setSize(600, 500);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
 

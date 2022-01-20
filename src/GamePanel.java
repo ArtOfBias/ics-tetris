@@ -1,11 +1,12 @@
 package src;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
 public class GamePanel extends JPanel implements Runnable, KeyListener{
     public static final int GAME_WIDTH = 600;
-    public static final int GAME_HEIGHT = 500;
+    public static final int GAME_HEIGHT = 420;
 
     public static final String LEFT = "left";
     public static final String RIGHT = "right";
@@ -107,7 +108,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
     public GamePanel(){
         this.setFocusable(true);
-        this.addKeyListener(this);
         this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
         this.addKeyListener(this);
 
@@ -156,7 +156,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
             if (e.getKeyCode() == KeyEvent.VK_LEFT){
                 if (!held_LEFT){
-                    stopwatchLeft.start();
+                    stopwatchLeft.restart();
                     move(LEFT);
                     held_LEFT = true;
                 }
@@ -164,7 +164,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
             if (e.getKeyCode() == KeyEvent.VK_RIGHT){
                 if (!held_RIGHT){
-                    stopwatchRight.start();
+                    stopwatchRight.restart();
                     move(RIGHT);
                     held_RIGHT = true;
                 }
@@ -172,7 +172,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
             if (e.getKeyCode() == KeyEvent.VK_DOWN){
                 if (!held_DOWN){
-                    stopwatchDown.start();
+                    stopwatchDown.restart();
                     stopwatchFall.restart();
                     move(DOWN);
                     score++;
@@ -249,7 +249,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
             if (currentPieceLocation[1] == ghostPieceLocation[1]){
                 if (!stopwatchLock.isRunning()){
-                    stopwatchLock.start();
+                    stopwatchLock.restart();
                 }
 
                 // actions once block is locked
@@ -332,7 +332,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             
             for (int i = 0; i < 4; i++){
                 realX = (GAME_WIDTH - BOARD_WIDTH * SCALE) / 2 - 80 + (holdTetrimino.block(i)[0] + START_POSITIONS[hold - 1][0] - 5)* SCALE;
-                realY = (BOARD_HEIGHT + 100 - (holdTetrimino.block(i)[1] + START_POSITIONS[hold - 1][1] - 1) * SCALE);
+                realY = (40 - (holdTetrimino.block(i)[1] + START_POSITIONS[hold - 1][1] - 1) * SCALE);
                 g.fillRect(realX, realY, SCALE, SCALE);
             }
         }
@@ -358,7 +358,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             
             for (int j = 0; j < 4; j++){
                 realX = (GAME_WIDTH + BOARD_WIDTH * SCALE) / 2 + 40 + (queueTetrimino.block(j)[0] + START_POSITIONS[queueTetrimino.typeInt() - 1][0] - 5)* SCALE;
-                realY = (BOARD_HEIGHT + 30 + 70 * (i + 1) - (queueTetrimino.block(j)[1] + START_POSITIONS[queueTetrimino.typeInt() - 1][1] - 1) * SCALE);
+                realY = (- 30 + 70 * (i + 1) - (queueTetrimino.block(j)[1] + START_POSITIONS[queueTetrimino.typeInt() - 1][1] - 1) * SCALE);
                 g.fillRect(realX, realY, SCALE, SCALE);
             }
         }
@@ -371,7 +371,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         g.drawString("LEVEL", (GAME_WIDTH - BOARD_WIDTH * SCALE) / 4, GAME_HEIGHT - 140);
         g.drawString(String.valueOf(level), (GAME_WIDTH - BOARD_WIDTH * SCALE) / 4, GAME_HEIGHT - 120);
 
-        // drawsscore
+        // draws score
         String scoreString = "";
 
         for (int i = 0; i < 7 - String.valueOf(score).length(); i++){
@@ -386,6 +386,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         // draws cleared lines
         g.drawString("LINES", (GAME_WIDTH - BOARD_WIDTH * SCALE) / 4, GAME_HEIGHT - 40);
         g.drawString(String.valueOf(lines), (GAME_WIDTH - BOARD_WIDTH * SCALE) / 4, GAME_HEIGHT - 20);
+
+        if (end){
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("Consolas", Font.PLAIN, 100));
+            g.drawString("GAME", 193, GAME_HEIGHT / 2);
+            g.drawString("END", 213, GAME_HEIGHT / 2 + 100);
+        }
     }
 
     public void rotate(String direction){
