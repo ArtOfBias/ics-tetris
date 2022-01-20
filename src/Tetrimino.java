@@ -85,10 +85,10 @@ class Tetrimino {
             this.type = type;
         }
         else if (type == 7){
-            blocks[0] = new int[] {0,0};
-            blocks[1] = new int[] {1,0};
-            blocks[2] = new int[] {1,-1};
-            blocks[3] = new int[] {2,-1};
+            blocks[0] = new int[] {-1,0};
+            blocks[1] = new int[] {0,0};
+            blocks[2] = new int[] {0,-1};
+            blocks[3] = new int[] {1,-1};
             anchorLeft = 1;
             anchorRight = 1;
             anchorTurn = 1;
