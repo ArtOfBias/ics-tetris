@@ -82,8 +82,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public double arr = 10; // auto repeat rate
 
     public double fallDelay = 1000; // time it takes for piece to fall automatically
-    // TODO this should be dynamic and change with levels
-    // TODO levels
 
     public int hold = 0;
 
@@ -132,8 +130,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
     }
 
-    // TODO probably want to use threads for this, rethink how this is done
-    // alternatively, function with a bunch of if statements that runs everytime (more resource-heavy?)
     @Override
     public void keyPressed(KeyEvent e){
         if (!end){
@@ -287,14 +283,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     }
 
     public void draw(Graphics g){
-        // drawing board outline
+        // draws board outline
         int realX;
         int realY;
 
         g.setColor(Color.LIGHT_GRAY);
         g.fillRect((GAME_WIDTH - BOARD_WIDTH * SCALE) / 2 - 1, GAME_HEIGHT - END_HEIGHT * SCALE - 1, BOARD_WIDTH * SCALE + 2, (END_HEIGHT + 1) * SCALE + 1);
 
-        // drawing placed blocks on the board
+        // draws placed blocks on the board
         for (int x = 0; x < BOARD_WIDTH; x++){
             for (int y = 0; y < END_HEIGHT; y++){
                 g.setColor(PIECE_COLOUR[board[x][y]]);
@@ -304,7 +300,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             }
         }
 
-        // drawing ghost peice
+        // draws ghost peice
         g.setColor(PIECE_COLOUR[currentPiece.typeInt()].darker().darker());
 
         for (int i = 0; i < 4; i++){
@@ -316,7 +312,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             g.fillRect(realX, realY, SCALE, SCALE);
         }
 
-        // drawing current piece, this come after ghost piece in case of overlap
+        // drawscurrent piece, this come after ghost piece in case of overlap
         g.setColor(PIECE_COLOUR[currentPiece.typeInt()]);
 
         for (int i = 0; i < 4; i++){
@@ -328,21 +324,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             g.fillRect(realX, realY, SCALE, SCALE);
         }
 
-        // drawing score
-        String scoreString = "";
-
-        for (int i = 0; i < 7 - String.valueOf(score).length(); i++){
-            scoreString += "0";
-        }
-
-        scoreString += String.valueOf(score);
-
-        g.setColor(Color.LIGHT_GRAY);
-        g.setFont(new Font("Consolas", Font.PLAIN, 20));
-        g.drawString("SCORE", (GAME_WIDTH - BOARD_WIDTH * SCALE) / 4, GAME_HEIGHT - 40);
-        g.drawString(scoreString, (GAME_WIDTH - BOARD_WIDTH * SCALE) / 4, GAME_HEIGHT - 20);
-
-        // drawing held piece
+        // drawsheld piece
         if (hold != 0){
             Tetrimino holdTetrimino = new Tetrimino(hold);
 
@@ -355,7 +337,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             }
         }
 
-        // TODO draw queue
+        // draws queue
         Tetrimino queueTetrimino;
         int queuePosition;
 
@@ -376,10 +358,34 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             
             for (int j = 0; j < 4; j++){
                 realX = (GAME_WIDTH + BOARD_WIDTH * SCALE) / 2 + 40 + (queueTetrimino.block(j)[0] + START_POSITIONS[queueTetrimino.typeInt() - 1][0] - 5)* SCALE;
-                realY = (BOARD_HEIGHT + 40 + 60 * (i + 1) - (queueTetrimino.block(j)[1] + START_POSITIONS[queueTetrimino.typeInt() - 1][1] - 1) * SCALE);
+                realY = (BOARD_HEIGHT + 30 + 70 * (i + 1) - (queueTetrimino.block(j)[1] + START_POSITIONS[queueTetrimino.typeInt() - 1][1] - 1) * SCALE);
                 g.fillRect(realX, realY, SCALE, SCALE);
             }
         }
+
+        // text
+        g.setColor(Color.LIGHT_GRAY);
+        g.setFont(new Font("Consolas", Font.PLAIN, 20));
+
+        // draws level
+        g.drawString("LEVEL", (GAME_WIDTH - BOARD_WIDTH * SCALE) / 4, GAME_HEIGHT - 140);
+        g.drawString(String.valueOf(level), (GAME_WIDTH - BOARD_WIDTH * SCALE) / 4, GAME_HEIGHT - 120);
+
+        // drawsscore
+        String scoreString = "";
+
+        for (int i = 0; i < 7 - String.valueOf(score).length(); i++){
+            scoreString += "0";
+        }
+
+        scoreString += String.valueOf(score);
+
+        g.drawString("SCORE", (GAME_WIDTH - BOARD_WIDTH * SCALE) / 4, GAME_HEIGHT - 90);
+        g.drawString(scoreString, (GAME_WIDTH - BOARD_WIDTH * SCALE) / 4, GAME_HEIGHT - 70);
+
+        // draws cleared lines
+        g.drawString("LINES", (GAME_WIDTH - BOARD_WIDTH * SCALE) / 4, GAME_HEIGHT - 40);
+        g.drawString(String.valueOf(lines), (GAME_WIDTH - BOARD_WIDTH * SCALE) / 4, GAME_HEIGHT - 20);
     }
 
     public void rotate(String direction){
@@ -513,7 +519,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             }
         }
         else if (direction.equals("turn")){
-            // TODO possible bug here
             rotationAnchorOriginal[0] = currentPiece.block(currentPiece.anchorIndex(TURN))[0] + currentPieceLocation[0];
             rotationAnchorOriginal[1] = currentPiece.block(currentPiece.anchorIndex(TURN))[1] + currentPieceLocation[1];
             anchorOriginal[0] = currentPiece.block(currentPiece.anchorIndex(TURN))[0] + currentPieceLocation[0];
@@ -614,6 +619,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         }
 
         matchPatterns();
+        updateLevel();
         repaint();
     }
 
@@ -668,7 +674,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     }
 
     public void ghostPiece(){
-        // TODO map space key
         int counter;
         int x = currentPieceLocation[0];
         int y;
@@ -704,7 +709,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     }
 
     public void matchPatterns(){
-        // TODO add t-spin, tetrises, etc
         int squareCounter;
         int lineCounter = 0;
         int x;
@@ -895,7 +899,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     }
 
     public void updateLevel(){
-        level = (int)(lines / 10);
+        if (level * 10 <= lines){
+            level = (int)(lines / 10);
+        }
+
+        fallDelay = (Math.pow((0.8 - (level -  1) * 0.007), level - 1)) * 1000;
+
+        // TODO no end?
         if (level > 15){
             end = true;
         }
@@ -903,6 +913,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
     public void hardDrop(){
         // TODO will probably cause issues if executed at the same time as lockdown timer starts
+        // no bugs so far
         stopwatchLock.reset();
         score += (currentPieceLocation[1] - ghostPieceLocation[1]) * 2;
 
