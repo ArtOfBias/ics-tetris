@@ -9,12 +9,16 @@ public class GameFrame extends JFrame implements ActionListener{
     JButton restartButton;
     JButton menuButton;
 
-    //constructor GameFrame()
-    //creates the frame for the game (i.e. size and layout)
-    //creates buttons that show at the top of the window
+    // constructor GameFrame()
+    // creates the frame for the game (i.e. size and layout)
+    // creates buttons that show at the top of the window
     public GameFrame(){
-        // TODO better code formatting
+        this.setTitle("Tetris");
+        this.setResizable(false);
+        this.setBackground(Color.BLACK);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(600, 500);
+
         this.setLayout(new BorderLayout());
         Container c = new Container();
         c.setLayout(new GridLayout());
@@ -41,19 +45,15 @@ public class GameFrame extends JFrame implements ActionListener{
 
         panel = new GamePanel();
         this.add(panel, BorderLayout.CENTER);
-        
-        this.setTitle("Tetris");
-        this.setResizable(false);
-        this.setBackground(Color.BLACK);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         this.pack();
         this.setVisible(true);
         this.setLocationRelativeTo(null);
         panel.requestFocusInWindow();
     }
 
-    //method actionPerformed
-    //redirects to new Gameframe or menu depending on which button was clicked
+    // method actionPerformed
+    // redirects to new Gameframe or menu depending on which button was clicked
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == restartButton){
