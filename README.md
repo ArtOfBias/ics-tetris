@@ -10,5 +10,5 @@ A tetris clone.
 | A     | Rotate 180 degrees       |
 | LEFT  | Move left                |
 | RIGHT | Move right               |
-| DOWN  | Move down (softdrop)     |
-| SPACE | Harddrop                 |
+| DOWN  | Move down (soft drop)    |
+| SPACE | Hard drop                |
