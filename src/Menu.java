@@ -6,28 +6,25 @@ import javax.swing.*;
 
 // TODO settings
 public class Menu extends JFrame implements ActionListener{
-    public static final int BUTTON_WIDTH = 100;
-    public static final int BUTTON_HEIGHT = 40;
+    private static final int BUTTON_WIDTH = 200;
+    private static final int BUTTON_HEIGHT = 40;
 
-    public GameFrame frame;
-    public JButton play;
-    public JButton exit;
-    public Image image;
-    public ImageIcon icon;
-    public JLabel logo;
+    private JButton play, exit, highscores;
+    private ImageIcon icon;
+    private JLabel logo;
 
     public Menu(){
-        this.setTitle("Tetris");
+        this.setTitle("Tetris - Menu");
         this.setResizable(false);
-        this.setBackground(Color.GRAY);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(600, 500);
         this.setLocationRelativeTo(null);
-        this.setVisible(true);
-
+        
         Container c = getContentPane();
         c.setLayout(null);
-
+        
+        Font font = new Font("Consolas", Font.BOLD, 20);
+        
         //create new buttons
         play = new JButton("Play");
         play.addActionListener(this);
@@ -36,9 +33,19 @@ public class Menu extends JFrame implements ActionListener{
         play.setFocusPainted(false);
         play.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         play.setLocation((600 - BUTTON_WIDTH) / 2, 200);
+        play.setFont(font);
+        c.add(play);
 
-        // TODO high scores button
-
+        highscores = new JButton("High Scores");
+        highscores.addActionListener(this);
+        highscores.setBackground(Color.black);
+        highscores.setForeground(Color.white);
+        highscores.setFocusPainted(false);
+        highscores.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+        highscores.setLocation((600 - BUTTON_WIDTH) / 2, 260);
+        highscores.setFont(font);
+        c.add(highscores);
+        
         exit = new JButton("Exit");
         exit.addActionListener(this);
         exit.setBackground(Color.black);
@@ -46,22 +53,18 @@ public class Menu extends JFrame implements ActionListener{
         exit.setFocusPainted(false);
         exit.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         exit.setLocation((600 - BUTTON_WIDTH) / 2, 320);
-
+        exit.setFont(font);
+        c.add(exit);
+        
         // create logo image
         icon = new ImageIcon("assets\\Logo.png");
         logo = new JLabel("TEST");
         logo.setIcon(icon);
         logo.setLocation(200, 40);
         logo.setSize(200, 140);
-
-        Font font = new Font("Consolas", Font.BOLD, 20);
-        play.setFont(font);
-        exit.setFont(font);
-
-        c.add(play);
-        c.add(exit);
         c.add(logo);
 
+        this.setVisible(true);
         repaint();
     }
 
@@ -71,11 +74,14 @@ public class Menu extends JFrame implements ActionListener{
     }
 
     public void actionPerformed(ActionEvent e){
-        if(e.getSource() == play){
-            frame = new GameFrame();
+        if (e.getSource() == play){
+            new GameFrame();
             this.dispose();
         }
-        else {
+        else if (e.getSource() == highscores){
+            new HighScores();
+        }
+        else if (e.getSource() == exit){
             this.dispose();
         }
 

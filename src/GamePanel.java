@@ -12,23 +12,23 @@ import java.io.File;
 import java.io.IOException;
 
 public class GamePanel extends JPanel implements Runnable, KeyListener{
-    public static final int GAME_WIDTH = 600;
-    public static final int GAME_HEIGHT = 420;
+    private static final int GAME_WIDTH = 600;
+    private static final int GAME_HEIGHT = 420;
 
-    public static final String LEFT = "left";
-    public static final String RIGHT = "right";
-    public static final String TURN = "turn";
-    public static final String DOWN = "down";
+    private static final String LEFT = "left";
+    private static final String RIGHT = "right";
+    private static final String TURN = "turn";
+    private static final String DOWN = "down";
 
-    public static final int BOARD_WIDTH = 10;
-    public static final int END_HEIGHT = 20;
-    public static final int BOARD_HEIGHT = 25;
+    private static final int BOARD_WIDTH = 10;
+    private static final int END_HEIGHT = 20;
+    private static final int BOARD_HEIGHT = 25;
 
-    public static final int SCALE = 20;
+    private static final int SCALE = 20;
 
-    public static final int LOCK_TIME = 500;
+    private static final int LOCK_TIME = 500;
 
-    public static final Color[] PIECE_COLOUR = new Color[] {
+    private static final Color[] PIECE_COLOUR = new Color[] {
         Color.BLACK,
         Color.YELLOW,
         Color.CYAN,
@@ -39,7 +39,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         Color.RED
     };
 
-    public static final int[][] START_POSITIONS = new int[][] {
+    private static final int[][] START_POSITIONS = new int[][] {
         {6,1},
         {6,1},
         {5,1},
@@ -50,66 +50,66 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     };
 
     // the following booleans indicate whether the corresponding key is held down
-    public boolean held_Z = false;
-    public boolean held_UP = false;
-    public boolean held_A = false;
-    public boolean held_C = false;
-    public boolean held_SPACE = false;
-    public boolean held_LEFT = false;
-    public boolean held_RIGHT = false;
-    public boolean held_DOWN = false;
+    private boolean held_Z = false;
+    private boolean held_UP = false;
+    private boolean held_A = false;
+    private boolean held_C = false;
+    private boolean held_SPACE = false;
+    private boolean held_LEFT = false;
+    private boolean held_RIGHT = false;
+    private boolean held_DOWN = false;
 
     // whether hold has been pressed this turn, resets once a peice has been placed
-    public boolean hold_pressed = false;
+    private boolean hold_pressed = false;
 
     // the following booleans indicate whether this is the first time the corresponding is being pressed
-    public boolean first_LEFT  = true;
-    public boolean first_RIGHT = true;
-    public boolean first_DOWN  = true;
+    private boolean first_LEFT  = true;
+    private boolean first_RIGHT = true;
+    private boolean first_DOWN  = true;
 
     // the following help time the automatic repetition mechanic
-    public Stopwatch stopwatchLeft  = new Stopwatch();
-    public Stopwatch stopwatchRight = new Stopwatch();
-    public Stopwatch stopwatchDown  = new Stopwatch();
+    private Stopwatch stopwatchLeft  = new Stopwatch();
+    private Stopwatch stopwatchRight = new Stopwatch();
+    private Stopwatch stopwatchDown  = new Stopwatch();
 
-    public Stopwatch stopwatchFall = new Stopwatch(); // stopwatch for automatic falling
-    public Stopwatch stopwatchLock = new Stopwatch(); // stopwatch for lockdown timer
+    private Stopwatch stopwatchFall = new Stopwatch(); // stopwatch for automatic falling
+    private Stopwatch stopwatchLock = new Stopwatch(); // stopwatch for lockdown timer
 
-    public Thread gameThread;
-    public Graphics graphics;
-    public Image image;
+    private Thread gameThread;
+    private Graphics graphics;
+    private Image image;
 
-    public int[][] board = new int[BOARD_WIDTH][BOARD_HEIGHT]; // board, where placed pieces are stored
-    public Tetrimino currentPiece; // current piece being controlled by player
-    public int[] currentPieceLocation = new int[2]; // location of current piece
-    public int[] ghostPieceLocation = new int[2]; // location of ghost piece, projection of current piece
+    private int[][] board = new int[BOARD_WIDTH][BOARD_HEIGHT]; // board, where placed pieces are stored
+    private Tetrimino currentPiece; // current piece being controlled by player
+    private int[] currentPieceLocation = new int[2]; // location of current piece
+    private int[] ghostPieceLocation = new int[2]; // location of ghost piece, projection of current piece
 
-    public double das = 140; // delayed auto shift
-    public double arr = 10; // auto repeat rate
+    private double das = 140; // delayed auto shift
+    private double arr = 10; // auto repeat rate
 
-    public double fallDelay = 1000; // time it takes for piece to fall automatically
+    private double fallDelay = 1000; // time it takes for piece to fall automatically
 
-    public int hold = 0;
+    private int hold = 0;
 
     // variables for handling piece queue
-    public Bag bag1 = new Bag();
-    public Bag bag2 = new Bag();
-    public int bagPosition = 0;
+    private Bag bag1 = new Bag();
+    private Bag bag2 = new Bag();
+    private int bagPosition = 0;
 
     // stores number of lines cleared
-    public int lines = 0;
+    private int lines = 0;
 
     // stores current level
-    public int level = 1;
+    private int level = 1;
 
     // stores the score
-    public int score = 0;
+    private int score = 0;
 
     // stores whether a back-to-back bonus will be applied
-    public boolean btb = false;
+    private boolean btb = false;
 
-    // TODO unfinished
-    public boolean end = false;
+    // whether the current game as ended
+    private boolean end = false;
 
     public GamePanel(){
         this.setFocusable(true);
@@ -520,7 +520,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         }
     }
 
-    public void rotate(String direction){
+    private void rotate(String direction){
         int[] rotationAnchorOriginal = new int[2];
         int[] anchorOriginal = new int[2];
         int counter;
@@ -733,7 +733,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         }
     }
 
-    public void placePiece(){
+    private void placePiece(){
         int x = currentPieceLocation[0];
         int y = currentPieceLocation[1];
         int squareX;
@@ -755,7 +755,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         repaint();
     }
 
-    public void nextPiece(){
+    private void nextPiece(){
         currentPieceLocation[1] = BOARD_HEIGHT - 2;
         int queuePosition = bagPosition % 7;
 
@@ -788,7 +788,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     }
 
     // holds the current piece, puts held peice into current piece if held
-    public void holdPiece(){
+    private void holdPiece(){
         if (hold == 0){
             hold = currentPiece.typeInt();
             nextPiece();
@@ -805,7 +805,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         repaint();
     }
 
-    public void ghostPiece(){
+    private void ghostPiece(){
         int counter;
         int x = currentPieceLocation[0];
         int y;
@@ -840,7 +840,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         ghostPieceLocation = new int[] {x,y + 1};
     }
 
-    public void matchPatterns(){
+    private void matchPatterns(){
         int squareCounter;
         int lineCounter = 0;
         int x;
@@ -1030,7 +1030,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         lines += lineCounter;
     }
 
-    public void updateLevel(){
+    private void updateLevel(){
         if (level * 10 <= lines){
             level = (int)(lines / 10);
         }
@@ -1038,9 +1038,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         fallDelay = (Math.pow((0.8 - (level -  1) * 0.007), level - 1)) * 1000;
     }
 
-    public void hardDrop(){
-        // TODO will probably cause issues if executed at the same time as lockdown timer starts
-        // no bugs so far
+    private void hardDrop(){
         stopwatchLock.reset();
         score += (currentPieceLocation[1] - ghostPieceLocation[1]) * 2;
 
@@ -1053,7 +1051,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         nextPiece();
     }
 
-    public void move(String direction){
+    private void move(String direction){
         int counter = 0;
         int x = currentPieceLocation[0];
         int y = currentPieceLocation[1];
@@ -1142,7 +1140,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         ghostPiece();
     }
 
-    public void processKeys(){
+    private void processKeys(){
         if (held_LEFT){
             if (first_LEFT && (stopwatchLeft.elapsed() >= das)){
                 stopwatchLeft.restart();
@@ -1186,7 +1184,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
     // TODO organise functions
 
-    public double distance(int[] point1, int[] point2){
+    private double distance(int[] point1, int[] point2){
         double square1 = Math.pow(point1[0] - point2[0], 2);
         double square2 = Math.pow(point1[1] - point2[1], 2);
         return Math.sqrt(square1 + square2);

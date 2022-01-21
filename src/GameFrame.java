@@ -51,12 +51,11 @@ public class GameFrame extends JFrame implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
         if (e.getSource() == restartButton){
             new GameFrame();
             this.dispose();
         }
-        if (e.getSource() == menuButton){
+        else if (e.getSource() == menuButton){
             new Menu();
             this.dispose();
         }
