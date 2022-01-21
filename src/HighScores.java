@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.IOException;
 
 // class Highscores
-// notes the highscores of 
+// stores the highscores of previous plays for the play (max 5)
 public class HighScores extends JFrame{
     private int[] highscores = new int[] {0,0,0,0,0};
 
