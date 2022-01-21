@@ -12,7 +12,6 @@ public class GameFrame extends JFrame implements ActionListener{
     //constructor GameFrame()
     //creates the frame for the game (i.e. size and layout)
     //creates buttons that show at the top of the window
-    //post: creates the game frame and window along with background color and buttons display
     public GameFrame(){
         // TODO better code formatting
         this.setSize(600, 500);
@@ -53,6 +52,8 @@ public class GameFrame extends JFrame implements ActionListener{
         panel.requestFocusInWindow();
     }
 
+    //method actionPerformed
+    //redirects to new Gameframe or menu depending on which button was clicked
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == restartButton){

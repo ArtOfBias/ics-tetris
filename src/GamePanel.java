@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class GamePanel extends JPanel implements Runnable, KeyListener{
+    //dimensions fo the game window
     private static final int GAME_WIDTH = 600;
     private static final int GAME_HEIGHT = 420;
 
@@ -20,13 +21,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     private static final String TURN = "turn";
     private static final String DOWN = "down";
 
+    //state the dimensions of the board (in blocks not pixels)
     private static final int BOARD_WIDTH = 10;
     private static final int END_HEIGHT = 20;
     private static final int BOARD_HEIGHT = 25;
 
     private static final int SCALE = 20;
 
-    private static final int LOCK_TIME = 500;
+    private static final int LOCK_TIME = 500; 
 
     private static final Color[] PIECE_COLOUR = new Color[] {
         Color.BLACK,

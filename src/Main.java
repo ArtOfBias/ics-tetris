@@ -8,6 +8,7 @@ package src;
 // TODO leaderboard
 
 class Main {
+    //run the program by calling Menu()
     public static void main(String[] args){
         new Menu();
     }
