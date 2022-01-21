@@ -53,7 +53,8 @@ public class HighScores extends JFrame{
     }
 
     // method getHighScores()
-    // stores the highscores in a new file to be printed
+    // stores the highscores in a file (creates a new one if not already present)
+    // fills with zeros if there are no highscores
     public void getHighScores(){
         boolean newFile = true;
         File dataFolder = new File("data");

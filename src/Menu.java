@@ -5,6 +5,8 @@ import java.awt.event.*;
 import javax.swing.*;
 
 // TODO settings
+// class Menu
+// Displays the Main Menu for the game with buttons to redirect to gameplay and to exit
 public class Menu extends JFrame implements ActionListener{
     //state the dimensions of the buttons
     private static final int BUTTON_WIDTH = 200;
