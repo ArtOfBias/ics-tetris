@@ -4,14 +4,11 @@ package src;
 // import javax.swing.*;
 // import java.awt.event.*;
 
-// TODO javadoc
+// TODO comments
 // TODO leaderboard
-// TODO saving leaderboard
 
 class Main {
     public static void main(String[] args){
-        //GameFrame frame = new GameFrame();
-        Menu menu = new Menu();
-        menu.setVisible(true);
+        new Menu();
     }
 }

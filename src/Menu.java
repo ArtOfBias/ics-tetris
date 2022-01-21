@@ -6,11 +6,15 @@ import javax.swing.*;
 
 // TODO settings
 public class Menu extends JFrame implements ActionListener{
-    //private ImageIcon image;
-    //private JLabel imageLabel;
-    GameFrame frame;
-    JButton play;
-    JButton exit;
+    public static final int BUTTON_WIDTH = 100;
+    public static final int BUTTON_HEIGHT = 40;
+
+    public GameFrame frame;
+    public JButton play;
+    public JButton exit;
+    public Image image;
+    public ImageIcon icon;
+    public JLabel logo;
 
     public Menu(){
         this.setTitle("Tetris");
@@ -20,52 +24,50 @@ public class Menu extends JFrame implements ActionListener{
         this.setSize(600, 500);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
-        
+
+        Container c = getContentPane();
+        c.setLayout(null);
+
         //create new buttons
         play = new JButton("Play");
         play.addActionListener(this);
+        play.setBackground(Color.black);
+        play.setForeground(Color.white);
+        play.setFocusPainted(false);
+        play.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+        play.setLocation((600 - BUTTON_WIDTH) / 2, 200);
+
+        // TODO high scores button
+
         exit = new JButton("Exit");
         exit.addActionListener(this);
-        //set button colors
-        play.setBackground(Color.black);
         exit.setBackground(Color.black);
-        play.setForeground(Color.white);
         exit.setForeground(Color.white);
-        play.setFocusPainted(false);
         exit.setFocusPainted(false);
+        exit.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+        exit.setLocation((600 - BUTTON_WIDTH) / 2, 320);
 
-        //add the buttons
-        Container c = getContentPane();
-        c.setLayout(null);
-        play.setSize(100, 50);
-        exit.setSize(100, 50);
-        play.setLocation(235, 200);
-        exit.setLocation(235, 300);
-        c.add(play);
-        c.add(exit);
+        // create logo image
+        icon = new ImageIcon("assets\\Logo.png");
+        logo = new JLabel("TEST");
+        logo.setIcon(icon);
+        logo.setLocation(200, 40);
+        logo.setSize(200, 140);
 
         Font font = new Font("Consolas", Font.BOLD, 20);
-        ((JButton)play).setFont(font);
-        ((JButton)exit).setFont(font);
+        play.setFont(font);
+        exit.setFont(font);
 
+        c.add(play);
+        c.add(exit);
+        c.add(logo);
 
-        //add image
-        /*image = new ImageIcon(getClass().getResource("Logo.png"));
-        imageLabel = new JLabel(image);
-        add(imageLabel);*/
-
-
-        pack();
         repaint();
-        // TODO does not work if menu button is pressed in GameFrame
     }
 
     public void paint(Graphics g){
-        super.paint(g);
         getContentPane().setBackground(Color.black);
-        /*g.setFont(new Font("Consolas", Font.PLAIN, 36)); 
-        g.setColor(Color.white);
-        g.drawString("Tetris", 235, 150);*/
+        super.paint(g);
     }
 
     public void actionPerformed(ActionEvent e){
@@ -76,7 +78,7 @@ public class Menu extends JFrame implements ActionListener{
         else {
             this.dispose();
         }
+
         repaint();
     }
-
 }
