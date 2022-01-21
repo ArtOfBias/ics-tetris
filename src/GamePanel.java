@@ -1,3 +1,6 @@
+// class GamePanel
+// main JPanel where the game runs and is displayed
+
 package src;
 
 import java.awt.*;
@@ -12,7 +15,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class GamePanel extends JPanel implements Runnable, KeyListener{
-    // dimensions fo the game window
+    // dimensions for the game panel
     private static final int GAME_WIDTH = 600;
     private static final int GAME_HEIGHT = 420;
 
