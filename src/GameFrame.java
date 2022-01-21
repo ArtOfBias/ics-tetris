@@ -1,3 +1,6 @@
+// class GameFrame
+// JFrame where the game is run, has buttons to restart the game or to return to main menu
+
 package src;
 
 import java.awt.*;
@@ -6,8 +9,7 @@ import javax.swing.*;
 
 public class GameFrame extends JFrame implements ActionListener{
     GamePanel panel;
-    JButton restartButton;
-    JButton menuButton;
+    JButton restartButton, menuButton;
 
     // constructor GameFrame()
     // creates the frame for the game (i.e. size and layout)
@@ -20,16 +22,17 @@ public class GameFrame extends JFrame implements ActionListener{
         this.setSize(600, 500);
 
         this.setLayout(new BorderLayout());
+
+        // container for buttons in top bar
         Container c = new Container();
         c.setLayout(new GridLayout());
-        
+
+        // adding buttons
         restartButton = new JButton("Restart");
         restartButton.addActionListener(this);
         restartButton.setFont(new Font("Consolas", Font.PLAIN, 20));
         restartButton.setBackground(Color.BLACK);
         restartButton.setForeground(Color.LIGHT_GRAY);
-        restartButton.setSize(100, 50);
-        restartButton.setLocation((600 - 100) / 2, 0);
         c.add(restartButton);
 
         menuButton = new JButton("Menu");
@@ -37,8 +40,6 @@ public class GameFrame extends JFrame implements ActionListener{
         menuButton.setFont(new Font("Consolas", Font.PLAIN, 20));
         menuButton.setBackground(Color.BLACK);
         menuButton.setForeground(Color.LIGHT_GRAY);
-        menuButton.setSize(100, 50);
-        menuButton.setLocation((600 - 100) / 2, 50);
         c.add(menuButton);
 
         this.add(c, BorderLayout.NORTH);
@@ -49,7 +50,7 @@ public class GameFrame extends JFrame implements ActionListener{
         this.pack();
         this.setVisible(true);
         this.setLocationRelativeTo(null);
-        panel.requestFocusInWindow();
+        panel.requestFocusInWindow(); // allows key inputs to be passed to panel
     }
 
     // method actionPerformed

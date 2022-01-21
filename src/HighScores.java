@@ -1,3 +1,6 @@
+// class Highscores
+// stores the highscores of previous plays for the play (max 5)
+
 package src;
 
 import java.awt.*;
@@ -10,8 +13,6 @@ import java.io.FileReader;
 import java.io.File;
 import java.io.IOException;
 
-// class Highscores
-// stores the highscores of previous plays for the play (max 5)
 public class HighScores extends JFrame{
     private int[] highscores = new int[] {0,0,0,0,0};
 
@@ -53,8 +54,8 @@ public class HighScores extends JFrame{
     }
 
     // method getHighScores()
-    // stores the highscores in a file (creates a new one if not already present)
-    // fills with zeros if there are no highscores
+    // stores the highscores in a file (creates a new one and fills with 0 if not already present)
+    // retrieve high scores from file
     public void getHighScores(){
         boolean newFile = true;
         File dataFolder = new File("data");

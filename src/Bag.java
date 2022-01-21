@@ -1,24 +1,26 @@
-package src;
-
 // class Bag
 // Entails the main mechanics behind the bag system (shuffles the pieces randomly to be chosen)
+// This accurately recreates the 7-Bag system as described in the Tetris Guideline
+
+package src;
+
 public class Bag {
-    //Declaration of array
+    // Ddclaration of array
     private int[] bagPieces = new int[] {1,2,3,4,5,6,7};
 
-    //constructor calls on shuffle()
+    // constructor calls on shuffle()
     public Bag(){
         shuffle();
     }
 
-    //method piece()
-    //returns a piece number to represent the piece chosen
+    // method piece()
+    // returns a piece number to represent the piece chosen
     public int piece(int index){
         return bagPieces[index];
     }
 
-    //method shuffle()
-    //shuffles the bag so that the pieces are randomized
+    // method shuffle()
+    // shuffles the bag so that the pieces are randomized
     public void shuffle(){
         int targetIndex;
         int temp;
@@ -32,14 +34,14 @@ public class Bag {
         }
     }
 
-    //method randInt()
-    //returns a random int
+    // method randInt()
+    // returns a random int
     private static int randInt(int a, int b){
         return (int)Math.floor(randNumber(a, b + 1));
     }
 
-    //method randInt()
-    //returns a random number
+    // method randInt()
+    // returns a random number
     private static double randNumber(double a, double b){
         double x = Math.random();
         return x * (b - a) + a;

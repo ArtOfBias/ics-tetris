@@ -1,20 +1,20 @@
+// class Tetrimino
+// Objects of this class are used to represent tetriminos (pieces) in the game
+
 package src;
 
-
 class Tetrimino {
-    //each letter stands for a type of tetrimino block
+    // each letter stands for a type of tetrimino block
     private static final String[] TYPE = new String[] {"o","i","t","l","j","s","z"};
 
-    private int[][] blocks = new int[4][2];
-    private int anchorLeft;
-    private int anchorRight;
-    // S and Z anchors
-    private int anchorTurn;
-    private int temp;
-    private int type;
-    private int facing;
+    private int[][] blocks = new int[4][2]; // stores location of block in piece relative to anchorTurn
+    private int anchorLeft; // index of anchor in blocks
+    private int anchorRight; // index of anchor in blocks
+    private int anchorTurn; // index of anchor in blocks
+    private int type; // integer representation of type, corresponds to TYPE[type - 1]
+    private int facing; // stores which way the tetrimino is facing, used in matching t-spin pattern
 
-    //coonstructors based on if a string or int is passed
+    // constructors based on if a string or int is passed
     public Tetrimino(int type){
         changeType(type);
     }
@@ -23,7 +23,8 @@ class Tetrimino {
         changeType(type);
     }
 
-    
+    // method changeType(int type)
+    // changes the type of the object, with int argument
     public void changeType(int type){
         facing = 0;
 
@@ -102,8 +103,8 @@ class Tetrimino {
         }
     }
 
-    //method changeType(String type)
-    //changes the type from string to int
+    // method changeType(String type)
+    // changes the type of the object, with String argument
     public void changeType(String type){
         facing = 0;
 
@@ -135,9 +136,11 @@ class Tetrimino {
         changeType(this.type);
     }
 
-    //method rotate
-    //used to rotate the blocks based on direction by coordinating them on the imaginary board grid
+    // method rotate
+    // transforms the blocks array
     public void rotate(String direction){
+        int temp;
+
         if (direction.equals("left")){
             for (int i = 0; i < 4; i++){
                 temp = blocks[i][0];
@@ -166,21 +169,24 @@ class Tetrimino {
         }
     }
 
+    // used to access blocks in the blocks array
     public int[] block(int blockIndex){
         return blocks[blockIndex];
     }
 
+    // returns the type in string form
     public String typeString(){
         return TYPE[type - 1];
     }
 
+    // returns the type in int form
     public int typeInt(){
         return type;
     }    
 
-    //method anchorIndex
-    //returns either anchorLeft, anchorRight, or anchorTurn based on what direction
-    //the block should turn towards
+    // method anchorIndex
+    // returns either anchorLeft, anchorRight, or anchorTurn based on what direction
+    // the block should turn towards
     public int anchorIndex(String direction){
         if (direction.equals("left")){
             return anchorLeft;
@@ -196,8 +202,8 @@ class Tetrimino {
         }
     }
 
-    //method facing
-    //returns the value of the variable facing
+    // method facing
+    // returns the value of the variable facing
     public int facing(){
         return facing;
     }
