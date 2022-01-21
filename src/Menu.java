@@ -82,7 +82,7 @@ public class Menu extends JFrame implements ActionListener{
             new HighScores();
         }
         else if (e.getSource() == exit){
-            this.dispose();
+            this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         }
 
         repaint();
