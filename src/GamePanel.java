@@ -823,66 +823,66 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         repaint();
     }
 
-        // stores the piece's blocks to the board, calls matchPatterns() and updateLevel()
-        private void placePiece(){
-            int x = currentPieceLocation[0];
-            int y = currentPieceLocation[1];
-            int squareX;
-            int squareY;
-    
-            for (int i = 0; i < 4; i++){
-                squareX = x + currentPiece.block(i)[0];
-                squareY = y + currentPiece.block(i)[1];
-    
-                if (squareY >= END_HEIGHT){
-                    // ends the game if the placed piece has blocks greater than the end height
-                    end = true;
-                }
-    
-                board[squareX][squareY] = currentPiece.typeInt();
+    // stores the piece's blocks to the board, calls matchPatterns() and updateLevel()
+    private void placePiece(){
+        int x = currentPieceLocation[0];
+        int y = currentPieceLocation[1];
+        int squareX;
+        int squareY;
+
+        for (int i = 0; i < 4; i++){
+            squareX = x + currentPiece.block(i)[0];
+            squareY = y + currentPiece.block(i)[1];
+
+            if (squareY >= END_HEIGHT){
+                // ends the game if the placed piece has blocks greater than the end height
+                end = true;
             }
-    
-            matchPatterns();
-            updateLevel();
-            repaint();
+
+            board[squareX][squareY] = currentPiece.typeInt();
         }
-    
-        // sets current piece to the next piece in the queue
-        private void nextPiece(){
-            currentPieceLocation[1] = BOARD_HEIGHT - 2; // moves current piece out of visible area for processing
-            int queuePosition = bagPosition % 7;
-    
-            // determines which bag to use
-            if (bagPosition < 7){
-                currentPiece = new Tetrimino(bag1.piece(queuePosition));
-            }
-            else if (bagPosition < 14){
-                currentPiece = new Tetrimino(bag2.piece(queuePosition));
-            }
-            else {
-                throw new IndexOutOfBoundsException();
-            }
-    
-            // sets piece location to spawn location
-            currentPieceLocation = new int[] {START_POSITIONS[currentPiece.typeInt() - 1][0] - 1, END_HEIGHT + START_POSITIONS[currentPiece.typeInt() - 1][1] - 1};
-    
-            bagPosition++;
-    
-            // reshuffles bag if end of bag has been reached
-            if (bagPosition == 7){
-                bag1.shuffle();
-            }
-            else if (bagPosition == 14){
-                bag2.shuffle();
-                bagPosition = 0;
-            }
-    
-            move(DOWN);
-            stopwatchFall.restart();
-    
-            ghostPiece();
-            repaint();
+
+        matchPatterns();
+        updateLevel();
+        repaint();
+    }
+
+    // sets current piece to the next piece in the queue
+    private void nextPiece(){
+        currentPieceLocation[1] = BOARD_HEIGHT - 2; // moves current piece out of visible area for processing
+        int queuePosition = bagPosition % 7;
+
+        // determines which bag to use
+        if (bagPosition < 7){
+            currentPiece = new Tetrimino(bag1.piece(queuePosition));
         }
+        else if (bagPosition < 14){
+            currentPiece = new Tetrimino(bag2.piece(queuePosition));
+        }
+        else {
+            throw new IndexOutOfBoundsException();
+        }
+
+        // sets piece location to spawn location
+        currentPieceLocation = new int[] {START_POSITIONS[currentPiece.typeInt() - 1][0] - 1, END_HEIGHT + START_POSITIONS[currentPiece.typeInt() - 1][1] - 1};
+
+        bagPosition++;
+
+        // reshuffles bag if end of bag has been reached
+        if (bagPosition == 7){
+            bag1.shuffle();
+        }
+        else if (bagPosition == 14){
+            bag2.shuffle();
+            bagPosition = 0;
+        }
+
+        move(DOWN);
+        stopwatchFall.restart();
+
+        ghostPiece();
+        repaint();
+    }
 
     // matches patterns for t-spins, tetrises, and multi-line clears
     // also clears the lines in board
@@ -1084,7 +1084,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     // updates the level and the falling speed
     private void updateLevel(){
         if (level * 10 <= lines){
-            level = (int)(lines / 10);
+            level = (int)(lines / 10) + 1;
         }
 
         fallDelay = (Math.pow((0.8 - (level -  1) * 0.007), level - 1)) * 1000;
