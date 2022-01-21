@@ -10,9 +10,13 @@ import java.io.FileReader;
 import java.io.File;
 import java.io.IOException;
 
+// class Highscores
+// stores the highscores of previous plays for the play (max 5)
 public class HighScores extends JFrame{
     private int[] highscores = new int[] {0,0,0,0,0};
 
+    // constructor HighScores()
+    // creates the frame for the highscores window which displays on click
     public HighScores(){
         this.setTitle("Tetris - High Scores");
         this.setResizable(false);
@@ -26,6 +30,8 @@ public class HighScores extends JFrame{
         repaint();
     }
     
+    // method paint
+    // paints the background so that the text shows
     public void paint(Graphics g){
         Image image = createImage(200, 200);
         Graphics graphics = image.getGraphics();
@@ -33,6 +39,8 @@ public class HighScores extends JFrame{
         g.drawImage(image, 0, 0, this);
     }
 
+    // method draw
+    // displays the text for the highscores
     public void draw(Graphics g){
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, 200, 200);
@@ -44,6 +52,9 @@ public class HighScores extends JFrame{
         }
     }
 
+    // method getHighScores()
+    // stores the highscores in a file (creates a new one if not already present)
+    // fills with zeros if there are no highscores
     public void getHighScores(){
         boolean newFile = true;
         File dataFolder = new File("data");

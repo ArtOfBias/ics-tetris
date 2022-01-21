@@ -1,6 +1,7 @@
 package src;
 
-
+// class Bag
+// Entails the main mechanics behind the bag system (shuffles the pieces randomly to be chosen)
 public class Bag {
     //Declaration of array
     private int[] bagPieces = new int[] {1,2,3,4,5,6,7};
