@@ -10,7 +10,7 @@ public class GameFrame extends JFrame implements ActionListener{
     JButton menuButton;
 
     public GameFrame(){
-        // TODO better format
+        // TODO better code formatting
         this.setSize(600, 500);
         this.setLayout(new BorderLayout());
         Container c = new Container();
@@ -37,8 +37,6 @@ public class GameFrame extends JFrame implements ActionListener{
         this.add(c, BorderLayout.NORTH);
 
         panel = new GamePanel();
-        panel.setLocation(0, 100);
-        panel.setSize(400, 600);
         this.add(panel, BorderLayout.CENTER);
         
         this.setTitle("Tetris");
@@ -63,19 +61,4 @@ public class GameFrame extends JFrame implements ActionListener{
             this.dispose();
         }
     }
-
-    // @Override
-    // public void keyTyped(KeyEvent e) {
-        
-    // }
-
-    // @Override
-    // public void keyPressed(KeyEvent e) {
-    //     panel.keyPressed(e);
-    // }
-
-    // @Override
-    // public void keyReleased(KeyEvent e) {
-    //     panel.keyReleased(e);
-    // }
 }
