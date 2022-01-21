@@ -118,16 +118,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
         gameThread = new Thread(this); 
         gameThread.start();
-
-        /*try {
-            Robot r = new Robot();
-            r.keyPress(KeyEvent.VK_DOWN);
-            //r.keyRelease(KeyEvent.VK_DOWN);
-        }
-        catch (AWTException e) {
-            e.printStackTrace();
-        }*/
-        //^ code didn't work, but may be useful
     }
 
     @Override
