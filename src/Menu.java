@@ -6,6 +6,7 @@ import javax.swing.*;
 
 // TODO settings
 public class Menu extends JFrame implements ActionListener{
+    //state the dimensions of the buttons
     private static final int BUTTON_WIDTH = 200;
     private static final int BUTTON_HEIGHT = 40;
 
@@ -13,6 +14,9 @@ public class Menu extends JFrame implements ActionListener{
     private ImageIcon icon;
     private JLabel logo;
 
+    //method Menu()
+    //creates the frame for the menu window 
+    //displays the tetris image and also displays the buttons to play, quit, and view highscore
     public Menu(){
         this.setTitle("Tetris - Menu");
         this.setResizable(false);
@@ -68,11 +72,15 @@ public class Menu extends JFrame implements ActionListener{
         repaint();
     }
 
+    //method paint
+    //sets the background color to black
     public void paint(Graphics g){
         getContentPane().setBackground(Color.black);
         super.paint(g);
     }
 
+    //method actionPerformed
+    //redirects to other windows when the buttons are clicked
     public void actionPerformed(ActionEvent e){
         if (e.getSource() == play){
             new GameFrame();

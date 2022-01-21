@@ -11,16 +11,13 @@ public class Bag {
     }
 
     //method piece()
-    //returns the piece number
-    //pre: number from 0-6
-    //post: number from 1-7 
+    //returns a piece number to represent the piece chosen
     public int piece(int index){
         return bagPieces[index];
     }
 
     //method shuffle()
     //shuffles the bag so that the pieces are randomized
-    //post: shuffles the bag (the array)
     public void shuffle(){
         int targetIndex;
         int temp;
@@ -36,16 +33,12 @@ public class Bag {
 
     //method randInt()
     //returns a random int
-    //pre: takes two integers a and b
-    //post: returns a random integer between a to b
     private static int randInt(int a, int b){
         return (int)Math.floor(randNumber(a, b + 1));
     }
 
     //method randInt()
     //returns a random number
-    //pre: takes two doubles a and b
-    //post: returns a random number between a to b
     private static double randNumber(double a, double b){
         double x = Math.random();
         return x * (b - a) + a;

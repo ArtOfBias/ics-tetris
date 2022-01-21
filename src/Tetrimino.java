@@ -2,6 +2,7 @@ package src;
 
 
 class Tetrimino {
+    //each letter stands for a type of tetrimino block
     private static final String[] TYPE = new String[] {"o","i","t","l","j","s","z"};
 
     private int[][] blocks = new int[4][2];
@@ -13,6 +14,7 @@ class Tetrimino {
     private int type;
     private int facing;
 
+    //coonstructors based on if a string or int is passed
     public Tetrimino(int type){
         changeType(type);
     }
@@ -21,6 +23,7 @@ class Tetrimino {
         changeType(type);
     }
 
+    
     public void changeType(int type){
         facing = 0;
 
@@ -99,6 +102,8 @@ class Tetrimino {
         }
     }
 
+    //method changeType(String type)
+    //changes the type from string to int
     public void changeType(String type){
         facing = 0;
 
@@ -130,6 +135,8 @@ class Tetrimino {
         changeType(this.type);
     }
 
+    //method rotate
+    //used to rotate the blocks based on direction by coordinating them on the imaginary board grid
     public void rotate(String direction){
         if (direction.equals("left")){
             for (int i = 0; i < 4; i++){
@@ -171,6 +178,9 @@ class Tetrimino {
         return type;
     }    
 
+    //method anchorIndex
+    //returns either anchorLeft, anchorRight, or anchorTurn based on what direction
+    //the block should turn towards
     public int anchorIndex(String direction){
         if (direction.equals("left")){
             return anchorLeft;
@@ -186,6 +196,8 @@ class Tetrimino {
         }
     }
 
+    //method facing
+    //returns the value of the variable facing
     public int facing(){
         return facing;
     }
