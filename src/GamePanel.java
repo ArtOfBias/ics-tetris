@@ -59,10 +59,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public boolean held_RIGHT = false;
     public boolean held_DOWN = false;
 
+    // whether hold has been pressed this turn, resets once a peice has been placed
     public boolean hold_pressed = false;
-
-    // TODO: use list instead?
-    // the problem with java is it has no dictionaries, making code that accesses this as a list very hard to read
 
     // the following booleans indicate whether this is the first time the corresponding is being pressed
     public boolean first_LEFT  = true;
@@ -247,7 +245,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
     @Override
     public void run(){
-        // TODO current code only supports one playthrough
         nextPiece();
 
         while (!end){
