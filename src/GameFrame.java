@@ -9,6 +9,10 @@ public class GameFrame extends JFrame implements ActionListener{
     JButton restartButton;
     JButton menuButton;
 
+    //constructor GameFrame()
+    //creates the frame for the game (i.e. size and layout)
+    //creates buttons that show at the top of the window
+    //post: creates the game frame and window along with background color and buttons display
     public GameFrame(){
         // TODO better code formatting
         this.setSize(600, 500);
