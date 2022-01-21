@@ -12,3 +12,9 @@ A tetris clone.
 | RIGHT | Move right               |
 | DOWN  | Move down (soft drop)    |
 | SPACE | Hard drop                |
+
+## Scoring
+
+Scoring is done as suggested in the 2009 Tetris Design Guideline, with the exception that Mini T-Spins are not implemented.
+
+![Scoring Table](./assets/Scoring.png)
