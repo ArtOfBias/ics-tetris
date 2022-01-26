@@ -593,14 +593,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                             found = true;
                             best[0] = anchorX;
                             best[1] = anchorY;
-                            bestDistance = distance(best, anchorOriginal);
+                            bestDistance = distance(best, rotationAnchorOriginal);
                         }
                         else {
                             if (distance(new int[] {anchorX,anchorY}, anchorOriginal) < bestDistance){
                                 // update best if the distance between anchors is less than the stored best distance
                                 best[0] = anchorX;
                                 best[1] = anchorY;
-                                bestDistance = distance(best, anchorOriginal);
+                                bestDistance = distance(best, rotationAnchorOriginal);
                             }
                             else if (distance(new int[] {anchorX,anchorY}, anchorOriginal) == bestDistance){
                                 // if equal distances
@@ -608,7 +608,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                                     // update best if new anchor location is lower than stored best anchor location
                                     best[0] = anchorX;
                                     best[1] = anchorY;
-                                    bestDistance = distance(best, anchorOriginal);
+                                    bestDistance = distance(best, rotationAnchorOriginal);
                                 }
                                 else if (anchorY == best[1]){
                                     // if equal height
@@ -616,7 +616,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                                         // update best if new anchor location is to the right of stored best anchor location
                                         best[0] = anchorX;
                                         best[1] = anchorY;
-                                        bestDistance = distance(best, anchorOriginal);
+                                        bestDistance = distance(best, rotationAnchorOriginal);
                                     }
                                 }
                             }
@@ -658,25 +658,25 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                             found = true;
                             best[0] = anchorX;
                             best[1] = anchorY;
-                            bestDistance = distance(best, anchorOriginal);
+                            bestDistance = distance(best, rotationAnchorOriginal);
                         }
                         else {
-                            if (distance(new int[] {anchorX,anchorY}, anchorOriginal) < bestDistance){
+                            if (distance(new int[] {anchorX,anchorY}, rotationAnchorOriginal) < bestDistance){
                                 best[0] = anchorX;
                                 best[1] = anchorY;
-                                bestDistance = distance(best, anchorOriginal);
+                                bestDistance = distance(best, rotationAnchorOriginal);
                             }
-                            else if (distance(new int[] {anchorX,anchorY}, anchorOriginal) == bestDistance){
+                            else if (distance(new int[] {anchorX,anchorY}, rotationAnchorOriginal) == bestDistance){
                                 if (anchorY < best[1]){
                                     best[0] = anchorX;
                                     best[1] = anchorY;
-                                    bestDistance = distance(best, anchorOriginal);
+                                    bestDistance = distance(best, rotationAnchorOriginal);
                                 }
                                 else if (anchorY == best[1]){
                                     if (anchorX < best[0]){
                                         best[0] = anchorX;
                                         best[1] = anchorY;
-                                        bestDistance = distance(best, anchorOriginal);
+                                        bestDistance = distance(best, rotationAnchorOriginal);
                                     }
                                 }
                             }
@@ -718,25 +718,25 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                             found = true;
                             best[0] = anchorX;
                             best[1] = anchorY;
-                            bestDistance = distance(best, anchorOriginal);
+                            bestDistance = distance(best, rotationAnchorOriginal);
                         }
                         else {
-                            if (distance(new int[] {anchorX,anchorY}, anchorOriginal) < bestDistance){
+                            if (distance(new int[] {anchorX,anchorY}, rotationAnchorOriginal) < bestDistance){
                                 best[0] = anchorX;
                                 best[1] = anchorY;
-                                bestDistance = distance(best, anchorOriginal);
+                                bestDistance = distance(best, rotationAnchorOriginal);
                             }
-                            else if (distance(new int[] {anchorX,anchorY}, anchorOriginal) == bestDistance){
+                            else if (distance(new int[] {anchorX,anchorY}, rotationAnchorOriginal) == bestDistance){
                                 if (anchorY < best[1]){
                                     best[0] = anchorX;
                                     best[1] = anchorY;
-                                    bestDistance = distance(best, anchorOriginal);
+                                    bestDistance = distance(best, rotationAnchorOriginal);
                                 }
                                 else if (anchorY == best[1]){
                                     if (anchorX > best[0]){
                                         best[0] = anchorX;
                                         best[1] = anchorY;
-                                        bestDistance = distance(best, anchorOriginal);
+                                        bestDistance = distance(best, rotationAnchorOriginal);
                                     }
                                 }
                             }
